@@ -1,13 +1,13 @@
-package main.java.com.school.final_project;
+package com.school.final_project;
 
 public class User {
     String userName;
     String firstName;
     String lastName;
     String password;
-    Int age;  
+    int age;  
     
-    updateAccount() {
+    void updateAccount() {
 
     };
 }
