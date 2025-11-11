@@ -11,7 +11,7 @@ public class Parent extends User {
     private ArrayList<StoreItem> storeInventory;
     private ArrayList<Transaction> transactions;
 
-    public Child createChildAccount(String childName, String userName){
+    public Child createChildAccount(String childName, String userName) {
         if (childName == null || childName.trim().isEmpty()) {
             throw new IllegalArgumentException("Child name cannot be empty");
         }
