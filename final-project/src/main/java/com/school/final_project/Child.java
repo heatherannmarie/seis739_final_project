@@ -15,4 +15,17 @@ public class Child extends User {
         this.parentId = parentId;
         this.balance = 0.0;
     }
+
+    public boolean puchaseItems(ArrayList<StoreItem> items) {
+        double totalCost = items.stream()
+                .mapToDouble(StoreItem::getPrice)
+                .sum();
+
+        if (balance >= totalCost) {
+            balance -= totalCost;
+            // Create transaction records
+            return true;
+        }
+        return false;
+    }
 }
