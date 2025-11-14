@@ -16,24 +16,48 @@ public class Chore {
         this.isAvailable = isAvailabe;
     }
 
-    public void markComplete() {
-        this.isAvailable = false;
-    }
-
-    public void makeAvailable() {
-        this.isAvailable = true;
-    }
-
     public void changePrice(float newPrice) {
         this.chorePrice = newPrice;
     }
 
-    public void assignToChild(String childId) {
-        this.assignedChildId = childId;
+    public void setChoreName(String newName) {
+        this.choreName = newName;
+    }
+
+    public void setChoreDescription(String newDescription) {
+        this.choreDescription = newDescription;
+    }
+
+    public void setChorePrice(float newPrice) {
+        this.chorePrice = newPrice;
+    }
+
+    public void setAssignedChildId(String newChildId) {
+        this.assignedChildId = newChildId;
+    }
+
+    public void setAvailable(boolean newAvailable) {
+        this.isAvailable = newAvailable;
     }
 
     public String getChoreName() {
         return choreName;
+    }
+
+    public String getChoreDescription() {
+        return choreDescription;
+    }
+
+    public float getChorePrice() {
+        return chorePrice;
+    }
+
+    public String getAssignedChildId() {
+        return assignedChildId;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
 }
