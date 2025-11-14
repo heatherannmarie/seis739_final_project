@@ -4,7 +4,7 @@ public class AllowanceTransaction extends Transaction {
     Parent payer;
     Child payee;
 
-    void addToChildBalance(){
-        
+    void addToChildBalance() {
+
     }
 }

@@ -5,6 +5,6 @@ public class StoreTransaction extends Transaction {
     StoreItem purchasedItem;
 
     void spendMoney() {
-        
+
     }
 }

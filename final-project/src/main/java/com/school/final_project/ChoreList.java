@@ -6,6 +6,6 @@ public class ChoreList {
     ArrayList<Chore> choreList = new ArrayList<Chore>();
 
     void addToHistory(Child childAccount, Parent guardianAccount) {
-        
+
     }
 }

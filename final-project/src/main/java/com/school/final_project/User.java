@@ -5,8 +5,8 @@ public class User {
     String firstName;
     String lastName;
     String password;
-    int age;  
-    
+    int age;
+
     void updateAccount() {
 
     };

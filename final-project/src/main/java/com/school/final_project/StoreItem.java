@@ -1,11 +1,12 @@
 package com.school.final_project;
 
 public class StoreItem {
-    String itemName;
-    int availableInventory;
-    float itemPrice;
+    private String itemName;
+    private int availableInventory;
+    private float itemPrice;
+    private String itemID;
 
-    boolean isAvailable(){
+    public boolean isAvailable() {
         boolean result = false;
         return result;
     }

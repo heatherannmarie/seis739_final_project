@@ -7,7 +7,8 @@ public class Chore {
     private String assignedChildId;
     private boolean isAvailable;
 
-    public Chore (String choreName, String choreDescription, float chorePrice, String assignedChildId, boolean isAvailabe) {
+    public Chore(String choreName, String choreDescription, float chorePrice, String assignedChildId,
+            boolean isAvailabe) {
         this.choreName = choreName;
         this.choreDescription = choreDescription;
         this.chorePrice = chorePrice;
@@ -31,5 +32,8 @@ public class Chore {
         this.assignedChildId = childId;
     }
 
-    
+    public String getChoreName() {
+        return choreName;
+    }
+
 }
