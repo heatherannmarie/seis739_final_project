@@ -9,10 +9,11 @@ public class Child extends User {
     private String parentId;
     private double balance;
 
-    public Child(String name, String username, String parentId) {
+    public Child(String name, String username, String parentId, String childID) {
         this.name = name;
         this.username = username;
         this.parentId = parentId;
         this.balance = 0.0;
+        this.childId = childID;
     }
 }
