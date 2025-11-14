@@ -22,11 +22,63 @@ public class Parent extends User {
         return newChild;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Child> getChildren() {
+        return children;
+    }
+
+    public ArrayList<Chore> getChores() {
+        return chores;
+    }
+
+    public ArrayList<StoreItem> getStoreInventory() {
+        return storeInventory;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setParentId(String newParentId) {
+        this.parentId = newParentId;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+    
+    public void setChildren(ArrayList<Child> newChildren) {
+        this.children = newChildren;
+    }
+
+    public void setChores(ArrayList<Chore> newChores) {
+        this.chores = newChores;
+    }
+    
+    public void setStoreInventory(ArrayList<StoreItem> newStoreInventory) {
+        this.storeInventory = newStoreInventory;
+    }
+
+    public void setTransactions(ArrayList<Transaction> newTransactions) {
+        this.transactions = newTransactions;
+    }
+
     public void addChore(Chore chore) {
         chores.add(chore);
     }
 
     public void addStoreItem(StoreItem item) {
         storeInventory.add(item);
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
     }
 }
