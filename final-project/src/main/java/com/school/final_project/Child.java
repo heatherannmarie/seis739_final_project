@@ -2,7 +2,7 @@ package com.school.final_project;
 
 import java.util.ArrayList;
 
-public class Child extends User {
+public class Child {
     private String childId;
     private String name;
     private String username;
@@ -16,6 +16,7 @@ public class Child extends User {
         this.parentId = parentId;
         this.balance = 0.0;
         this.childId = childID;
+        this.transactionHistory = new ArrayList<>();
     }
 
     public double getBalance() {

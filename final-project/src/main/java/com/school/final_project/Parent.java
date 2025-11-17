@@ -2,7 +2,7 @@ package com.school.final_project;
 
 import java.util.ArrayList;
 
-public class Parent extends User {
+public class Parent {
 
     private String parentId;
     private String name;
@@ -11,12 +11,21 @@ public class Parent extends User {
     private ArrayList<StoreItem> storeInventory;
     private ArrayList<Transaction> transactions;
 
-    public Child createChildAccount(String childName, String userName) {
+    public Parent(String parentId, String name) {
+        this.parentId = parentId;
+        this.name = name;
+        this.children = new ArrayList<>();
+        this.chores = new ArrayList<>();
+        this.storeInventory = new ArrayList<>();
+        this.transactions = new ArrayList<>();
+    }
+
+    public Child createChildAccount(String childName, String userName, String childId) {
         if (childName == null || childName.trim().isEmpty()) {
             throw new IllegalArgumentException("Child name cannot be empty");
         }
 
-        Child newChild = new Child(childName, userName, this.parentId);
+        Child newChild = new Child(childName, userName, this.parentId, childId);
         children.add(newChild);
 
         return newChild;
@@ -53,7 +62,7 @@ public class Parent extends User {
     public void setName(String newName) {
         this.name = newName;
     }
-    
+
     public void setChildren(ArrayList<Child> newChildren) {
         this.children = newChildren;
     }
@@ -61,7 +70,7 @@ public class Parent extends User {
     public void setChores(ArrayList<Chore> newChores) {
         this.chores = newChores;
     }
-    
+
     public void setStoreInventory(ArrayList<StoreItem> newStoreInventory) {
         this.storeInventory = newStoreInventory;
     }

@@ -3,11 +3,11 @@ package com.school.final_project;
 public class Chore {
     private String choreName;
     private String choreDescription;
-    private float chorePrice;
+    private double chorePrice;
     private String assignedChildId;
     private boolean isAvailable;
 
-    public Chore(String choreName, String choreDescription, float chorePrice, String assignedChildId,
+    public Chore(String choreName, String choreDescription, double chorePrice, String assignedChildId,
             boolean isAvailabe) {
         this.choreName = choreName;
         this.choreDescription = choreDescription;
@@ -16,7 +16,7 @@ public class Chore {
         this.isAvailable = isAvailabe;
     }
 
-    public void changePrice(float newPrice) {
+    public void changePrice(double newPrice) {
         this.chorePrice = newPrice;
     }
 
@@ -28,7 +28,7 @@ public class Chore {
         this.choreDescription = newDescription;
     }
 
-    public void setChorePrice(float newPrice) {
+    public void setChorePrice(double newPrice) {
         this.chorePrice = newPrice;
     }
 
@@ -48,7 +48,7 @@ public class Chore {
         return choreDescription;
     }
 
-    public float getChorePrice() {
+    public double getChorePrice() {
         return chorePrice;
     }
 
