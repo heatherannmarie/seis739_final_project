@@ -1,10 +1,10 @@
 package com.school.final_project;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Repository
 public class DataSharing {
 
     private Map<String, Parent> parents = new HashMap<>();
