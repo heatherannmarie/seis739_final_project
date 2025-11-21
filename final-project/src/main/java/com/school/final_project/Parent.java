@@ -12,7 +12,6 @@ public class Parent {
     private ArrayList<StoreItem> storeInventory;
     private ArrayList<Transaction> transactions;
 
-    // constructor
     public Parent(String parentId, String name) {
         this.parentId = parentId;
         this.name = name;
@@ -22,7 +21,6 @@ public class Parent {
         this.transactions = new ArrayList<>();
     }
 
-    // getters and setters
     public String getParentId() {
         return parentId;
     }
@@ -83,7 +81,6 @@ public class Parent {
         transactions.add(transaction);
     }
 
-    // other methods
     public Child createChildAccount(String childName, String userName, String childId) {
         if (childName == null || childName.trim().isEmpty()) {
             throw new IllegalArgumentException("Child name cannot be empty");
@@ -97,7 +94,6 @@ public class Parent {
         return newChild;
     }
 
-    // send money to child account for completed chores
     public void payChildForChore(Child child, Chore chore) {
 
         Transaction transaction = new Transaction(
@@ -115,8 +111,6 @@ public class Parent {
 
         chore.setAvailable(false);
     }
-
-    // edit child account
 
     public void assignChoreToChild(Chore chore, String childID) {
         chore.setAssignedChildId(childID);
