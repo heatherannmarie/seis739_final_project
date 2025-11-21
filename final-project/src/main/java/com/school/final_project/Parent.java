@@ -1,5 +1,6 @@
 package com.school.final_project;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Parent {
@@ -11,6 +12,7 @@ public class Parent {
     private ArrayList<StoreItem> storeInventory;
     private ArrayList<Transaction> transactions;
 
+    // constructor
     public Parent(String parentId, String name) {
         this.parentId = parentId;
         this.name = name;
@@ -20,17 +22,7 @@ public class Parent {
         this.transactions = new ArrayList<>();
     }
 
-    public Child createChildAccount(String childName, String userName, String childId) {
-        if (childName == null || childName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Child name cannot be empty");
-        }
-
-        Child newChild = new Child(childName, userName, this.parentId, childId);
-        children.add(newChild);
-
-        return newChild;
-    }
-
+    // getters and setters
     public String getParentId() {
         return parentId;
     }
@@ -89,5 +81,44 @@ public class Parent {
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
+    }
+
+    // other methods
+    public Child createChildAccount(String childName, String userName, String childId) {
+        if (childName == null || childName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Child name cannot be empty");
+        }
+
+        Child newChild = new Child(childName, userName, this.parentId, childId, this);
+        children.add(newChild);
+
+        // to do: this method needs to return log in credentials of some kind
+
+        return newChild;
+    }
+
+    // send money to child account for completed chores
+    public void payChildForChore(Child child, Chore chore) {
+
+        Transaction transaction = new Transaction(
+                "ALLOWANCE",
+                chore.getChorePrice(),
+                child.getChildId(),
+                "Completed: " + chore.getChoreName(),
+                LocalDateTime.now());
+
+        this.transactions.add(transaction);
+
+        child.getTransactionHistory().add(transaction);
+
+        child.addBalance(chore.getChorePrice());
+
+        chore.setAvailable(false);
+    }
+
+    // edit child account
+
+    public void assignChoreToChild(Chore chore, String childID) {
+        chore.setAssignedChildId(childID);
     }
 }

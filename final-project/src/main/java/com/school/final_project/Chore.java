@@ -6,14 +6,16 @@ public class Chore {
     private double chorePrice;
     private String assignedChildId;
     private boolean isAvailable;
+    private String choreID;
 
     public Chore(String choreName, String choreDescription, double chorePrice, String assignedChildId,
-            boolean isAvailabe) {
+            boolean isAvailabe, String ChoreID) {
         this.choreName = choreName;
         this.choreDescription = choreDescription;
         this.chorePrice = chorePrice;
         this.assignedChildId = assignedChildId;
         this.isAvailable = isAvailabe;
+        this.choreID = ChoreID;
     }
 
     public void changePrice(double newPrice) {
@@ -60,4 +62,7 @@ public class Chore {
         return isAvailable;
     }
 
+    public String getChoreId() {
+        return choreID;
+    }
 }
