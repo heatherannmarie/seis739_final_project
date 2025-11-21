@@ -97,7 +97,7 @@ public class Parent {
     public void payChildForChore(Child child, Chore chore) {
 
         Transaction transaction = new Transaction(
-                "ALLOWANCE",
+                TransactionType.ALLOWANCE,
                 chore.getChorePrice(),
                 child.getChildId(),
                 "Completed: " + chore.getChoreName(),

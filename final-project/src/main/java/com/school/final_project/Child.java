@@ -134,7 +134,7 @@ public class Child {
         this.balance -= item.getItemPrice();
 
         Transaction transaction = new Transaction(
-                "PURCHASE",
+                TransactionType.PURCHASE,
                 (float) item.getItemPrice(),
                 this.childId,
                 "Purchased: " + item.getItemName(),

@@ -3,13 +3,13 @@ package com.school.final_project;
 import java.time.*;
 
 public class Transaction {
-    private String type;
+    private TransactionType type;
     private double amount;
     private String childId;
     private String description;
     private LocalDateTime timestamp;
 
-    public Transaction(String type, double amount, String childId, String description, LocalDateTime timestamp) {
+    public Transaction(TransactionType type, double amount, String childId, String description, LocalDateTime timestamp) {
         this.type = type;
         this.amount = amount;
         this.childId = childId;
@@ -17,7 +17,7 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
