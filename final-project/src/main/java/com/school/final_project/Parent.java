@@ -1,16 +1,43 @@
 package com.school.final_project;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "parents")
 public class Parent {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
     private String parentId;
+
     private String name;
-    private ArrayList<Child> children;
-    private ArrayList<Chore> chores;
-    private ArrayList<StoreItem> storeInventory;
-    private ArrayList<Transaction> transactions;
+    private String email;
+    private String username;
+    private String passwordHash;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Child> children = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    private List<Chore> chores = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    private List<StoreItem> storeInventory = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "parent_id")
+    private List<Transaction> transactions = new ArrayList<>();
+
+    public Parent() {
+    }
 
     public Parent(String parentId, String name) {
         this.parentId = parentId;
@@ -29,44 +56,68 @@ public class Parent {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
     public ArrayList<Child> getChildren() {
-        return children;
+        return new ArrayList<>(children);
     }
 
     public ArrayList<Chore> getChores() {
-        return chores;
+        return new ArrayList<>(chores);
     }
 
     public ArrayList<StoreItem> getStoreInventory() {
-        return storeInventory;
+        return new ArrayList<>(storeInventory);
     }
 
     public ArrayList<Transaction> getTransactions() {
-        return transactions;
+        return new ArrayList<>(transactions);
     }
 
-    public void setParentId(String newParentId) {
-        this.parentId = newParentId;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setChildren(ArrayList<Child> newChildren) {
-        this.children = newChildren;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setChores(ArrayList<Chore> newChores) {
-        this.chores = newChores;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setStoreInventory(ArrayList<StoreItem> newStoreInventory) {
-        this.storeInventory = newStoreInventory;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
-    public void setTransactions(ArrayList<Transaction> newTransactions) {
-        this.transactions = newTransactions;
+    public void setChildren(ArrayList<Child> children) {
+        this.children = children;
+    }
+
+    public void setChores(ArrayList<Chore> chores) {
+        this.chores = chores;
+    }
+
+    public void setStoreInventory(ArrayList<StoreItem> storeInventory) {
+        this.storeInventory = storeInventory;
+    }
+
+    public void setTransactions(ArrayList<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     public void addChore(Chore chore) {
@@ -85,34 +136,22 @@ public class Parent {
         if (childName == null || childName.trim().isEmpty()) {
             throw new IllegalArgumentException("Child name cannot be empty");
         }
-
-        Child newChild = new Child(childName, userName, this.parentId, childId, this);
+        Child newChild = new Child(childName, userName, this, childId);
         children.add(newChild);
-
-        // to do: this method needs to return log in credentials of some kind
-
         return newChild;
     }
 
     public void payChildForChore(Child child, Chore chore) {
-
         Transaction transaction = new Transaction(
                 TransactionType.ALLOWANCE,
-                chore.getChorePrice(),
+                (float) chore.getChorePrice(),
                 child.getChildId(),
                 "Completed: " + chore.getChoreName(),
                 LocalDateTime.now());
 
         this.transactions.add(transaction);
-
         child.getTransactionHistory().add(transaction);
-
         child.addBalance(chore.getChorePrice());
-
         chore.setAvailable(false);
-    }
-
-    public void assignChoreToChild(Chore chore, String childID) {
-        chore.setAssignedChildId(childID);
     }
 }

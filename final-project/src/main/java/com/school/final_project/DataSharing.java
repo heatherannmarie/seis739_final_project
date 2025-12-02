@@ -1,36 +1,30 @@
 package com.school.final_project;
 
-import org.springframework.stereotype.Repository;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class DataSharing {
 
-    private Map<String, Parent> parents = new HashMap<>();
-    private Map<String, Child> children = new HashMap<>();
+    @Autowired
+    private ParentRepository parentRepository;
+
+    @Autowired
+    private ChildRepository childRepository;
 
     public void addParent(Parent parent) {
-        parents.put(parent.getParentId(), parent);
+        parentRepository.save(parent);
     }
 
     public Parent getParent(String parentId) {
-        return parents.get(parentId);
-    }
-
-    public Map<String, Parent> getAllParents() {
-        return parents;
+        return parentRepository.findByParentId(parentId).orElse(null);
     }
 
     public void addChild(Child child) {
-        children.put(child.getChildId(), child);
+        childRepository.save(child);
     }
 
     public Child getChild(String childId) {
-        return children.get(childId);
-    }
-
-    public Map<String, Child> getAllChildren() {
-        return children;
+        return childRepository.findByChildId(childId).orElse(null);
     }
 }

@@ -1,42 +1,50 @@
 package com.school.final_project;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Entity
+@Table(name = "children")
 public class Child {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
     private String childId;
+
     private String name;
     private String username;
-    private String parentId;
-    private Parent parent;
     private double balance;
-    private ArrayList<Transaction> transactionHistory;
 
-    public Child(String name, String username, String parentId, String childId, Parent parent) {
+    @ManyToOne
+    @JoinColumn(name = "parent_id", nullable = false)
+    private Parent parent;
+
+    @Column(name = "parent_id_string")
+    private String parentIdString;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "child_id")
+    private List<Transaction> transactionHistory = new ArrayList<>();
+
+    public Child() {
+    }
+
+    public Child(String name, String username, Parent parent, String childID) {
         this.name = name;
         this.username = username;
-        this.parentId = parentId;
-        this.balance = 0.0;
-        this.childId = childId;
-        this.transactionHistory = new ArrayList<>();
         this.parent = parent;
+        this.parentIdString = parent.getParentId();
+        this.balance = 0.0;
+        this.childId = childID;
+        this.transactionHistory = new ArrayList<>();
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void addBalance(double amount) {
-        balance += amount;
-    }
-
-    public void subtractBalance(double amount) {
-        balance -= amount;
-    }
-
-    public ArrayList<Transaction> getTransactionHistory() {
-        return transactionHistory;
+    public String getChildId() {
+        return childId;
     }
 
     public String getName() {
@@ -47,50 +55,66 @@ public class Child {
         return username;
     }
 
+    public double getBalance() {
+        return balance;
+    }
+
+    public Parent getParent() {
+        return parent;
+    }
+
     public String getParentId() {
-        return parentId;
+        return parentIdString;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
+    public ArrayList<Transaction> getTransactionHistory() {
+        return new ArrayList<>(transactionHistory);
     }
 
-    public void setUsername(String newUsername) {
-        this.username = newUsername;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setParentId(String newParentId) {
-        this.parentId = newParentId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setBalance(double newBalance) {
-        this.balance = newBalance;
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
-    public void setTransactionHistory(ArrayList<Transaction> newTransactionHistory) {
-        this.transactionHistory = newTransactionHistory;
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 
-    public String getChildId() {
-        return this.childId;
+    public void setParentId(String parentId) {
+        this.parentIdString = parentId;
     }
 
-    public void setChildID(String newChildId) {
-        this.childId = newChildId;
+    public void setTransactionHistory(ArrayList<Transaction> transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
+
+    public void addBalance(double amount) {
+        balance += amount;
+    }
+
+    public void subtractBalance(double amount) {
+        balance -= amount;
     }
 
     public List<Chore> viewAvailableChores() {
-        return this.parent.getChores().stream()
+        return parent.getChores().stream()
                 .filter(Chore::isAvailable)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public ArrayList<StoreItem> viewStoreItems() {
-        return this.parent.getStoreInventory();
+    public List<StoreItem> viewStoreItems() {
+        return parent.getStoreInventory();
     }
 
     public void selectChore(String choreId) {
-        Chore chore = this.parent.getChores().stream()
+        Chore chore = parent.getChores().stream()
                 .filter(c -> c.getChoreId().equals(choreId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Chore not found"));
@@ -103,7 +127,7 @@ public class Child {
     }
 
     public Transaction markChoreComplete(String choreId) {
-        Chore chore = this.parent.getChores().stream()
+        Chore chore = parent.getChores().stream()
                 .filter(c -> c.getChoreId().equals(choreId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Chore not found"));
@@ -112,12 +136,12 @@ public class Child {
             throw new RuntimeException("This chore is not assigned to you");
         }
 
-        this.parent.payChildForChore(this, chore);
+        parent.payChildForChore(this, chore);
         return this.transactionHistory.get(this.transactionHistory.size() - 1);
     }
 
     public Transaction purchaseItem(String itemId) {
-        StoreItem item = this.parent.getStoreInventory().stream()
+        StoreItem item = parent.getStoreInventory().stream()
                 .filter(i -> i.getItemID().equals(itemId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Item not found"));
@@ -141,7 +165,7 @@ public class Child {
                 java.time.LocalDateTime.now());
 
         this.transactionHistory.add(transaction);
-        this.parent.getTransactions().add(transaction);
+        parent.getTransactions().add(transaction);
 
         return transaction;
     }

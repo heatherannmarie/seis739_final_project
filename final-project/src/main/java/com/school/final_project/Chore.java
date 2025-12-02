@@ -1,45 +1,39 @@
 package com.school.final_project;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "chores")
 public class Chore {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String choreId;
+
     private String choreName;
     private String choreDescription;
     private double chorePrice;
     private String assignedChildId;
     private boolean isAvailable;
-    private String choreID;
 
-    public Chore(String choreName, String choreDescription, double chorePrice, String assignedChildId,
-            boolean isAvailabe, String ChoreID) {
+    public Chore() {
+    }
+
+    public Chore(String choreName, String choreDescription, double chorePrice,
+            String assignedChildId, boolean isAvailable, String choreId) {
         this.choreName = choreName;
         this.choreDescription = choreDescription;
         this.chorePrice = chorePrice;
         this.assignedChildId = assignedChildId;
-        this.isAvailable = isAvailabe;
-        this.choreID = ChoreID;
+        this.isAvailable = isAvailable;
+        this.choreId = choreId;
     }
 
-    public void changePrice(double newPrice) {
-        this.chorePrice = newPrice;
-    }
-
-    public void setChoreName(String newName) {
-        this.choreName = newName;
-    }
-
-    public void setChoreDescription(String newDescription) {
-        this.choreDescription = newDescription;
-    }
-
-    public void setChorePrice(double newPrice) {
-        this.chorePrice = newPrice;
-    }
-
-    public void setAssignedChildId(String newChildId) {
-        this.assignedChildId = newChildId;
-    }
-
-    public void setAvailable(boolean newAvailable) {
-        this.isAvailable = newAvailable;
+    public String getChoreId() {
+        return choreId;
     }
 
     public String getChoreName() {
@@ -62,7 +56,27 @@ public class Chore {
         return isAvailable;
     }
 
-    public String getChoreId() {
-        return choreID;
+    public void setChoreName(String choreName) {
+        this.choreName = choreName;
+    }
+
+    public void setChoreDescription(String choreDescription) {
+        this.choreDescription = choreDescription;
+    }
+
+    public void setChorePrice(double chorePrice) {
+        this.chorePrice = chorePrice;
+    }
+
+    public void setAssignedChildId(String assignedChildId) {
+        this.assignedChildId = assignedChildId;
+    }
+
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+    public void changePrice(double newPrice) {
+        this.chorePrice = newPrice;
     }
 }

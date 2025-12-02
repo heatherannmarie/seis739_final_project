@@ -1,10 +1,24 @@
 package com.school.final_project;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "store_items")
 public class StoreItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String itemID;
+
     private String itemName;
     private int availableInventory;
     private double itemPrice;
-    private String itemID;
+
+    public StoreItem() {
+    }
 
     public StoreItem(String itemName, int availableInventory, double itemPrice, String itemID) {
         this.itemName = itemName;
