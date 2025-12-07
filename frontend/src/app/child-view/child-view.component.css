@@ -1,0 +1,8 @@
+main {
+    display: flex;
+}
+
+nav {
+    position: left;
+    padding-right: 120px;
+}
