@@ -1,1 +1,8 @@
-<p>chore-list works!</p>
+<div class="chore-grid">
+    @for (chore of chores; track chore.name) {
+    <div class="chore-card">
+        <h3>{{ chore.name }}</h3>
+        <p>Points: {{ chore.points }}</p>
+    </div>
+    }
+</div>

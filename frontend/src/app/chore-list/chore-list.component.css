@@ -1,0 +1,11 @@
+.chore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.chore-card {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
