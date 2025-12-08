@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLinkWithHref, RouterLink } from '@angular/router';
+import { Router, RouterOutlet, RouterLink } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, RouterLinkWithHref, RouterLink],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
-})
 export class AppComponent {
-  title = 'frontend';
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
 }

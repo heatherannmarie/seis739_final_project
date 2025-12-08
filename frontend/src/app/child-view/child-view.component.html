@@ -1,14 +1,14 @@
 <div class="layout">
     <nav class="sidebar">
         <ul>
-            <li><a (click)="activeSection = 'children'">Children</a></li>
+            <li><a (click)="activeSection = 'account'">My Account</a></li>
             <li><a (click)="activeSection = 'chores'">Chores</a></li>
             <li><a (click)="activeSection = 'store'">Store</a></li>
         </ul>
     </nav>
 
     <main class="content">
-        @if (activeSection === 'children') {
+        @if (activeSection === 'account') {
         <h1>Child List</h1>
         <!-- your children cards and form -->
         }

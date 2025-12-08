@@ -3,6 +3,7 @@ import { ChildService } from '../services';
 import { ChoreListComponent } from '../chore-list/chore-list.component';
 import { RouterLink } from '@angular/router';
 import { StorefrontComponent } from '../storefront/storefront.component';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -14,15 +15,23 @@ import { StorefrontComponent } from '../storefront/storefront.component';
 export class ChildViewComponent implements OnInit {
   // Dashboard for child accounts
   private childService = inject(ChildService);
+  private authService = inject(AuthService);
 
-  activeSection: 'children' | 'chores' | 'store' = 'children';
+  activeSection: 'account' | 'chores' | 'store' = 'account';
   child: any;
-  chores: any [] = [];
+  chores: any[] = [];
   storeItems: any[] = [];
   transactions: any[] = [];
 
   ngOnInit() {
-    this.childService.getChild("child_1764733929203").subscribe({
+    const childId = this.authService.getChildId();
+
+    if (!childId) {
+      console.error('No child logged in');
+      return;
+    }
+
+    this.childService.getChild(childId).subscribe({
       next: (data) => this.child = data,
       error: (err) => console.error("Failed to load child data:", err),
     })

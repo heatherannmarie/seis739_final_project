@@ -3,6 +3,7 @@ package com.school.final_project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -130,5 +131,116 @@ public class ParentController {
         parent.payChildForChore(child, chore);
 
         return parent.getTransactions().get(parent.getTransactions().size() - 1);
+    }
+
+    @PutMapping("/{parentId}/chores/{choreId}")
+    public Chore updateChore(
+            @PathVariable String parentId,
+            @PathVariable String choreId,
+            @RequestBody Map<String, Object> request) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Chore chore = parent.getChores().stream()
+                .filter(c -> c.getChoreId().equals(choreId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Chore not found"));
+
+        // Update fields if they're provided in the request
+        if (request.containsKey("choreName")) {
+            chore.setChoreName((String) request.get("choreName"));
+        }
+        if (request.containsKey("choreDescription")) {
+            chore.setChoreDescription((String) request.get("choreDescription"));
+        }
+        if (request.containsKey("chorePrice")) {
+            chore.setChorePrice(((Number) request.get("chorePrice")).doubleValue());
+        }
+        if (request.containsKey("assignedChildId")) {
+            chore.setAssignedChildId((String) request.get("assignedChildId"));
+        }
+
+        dataStore.addParent(parent); // Save changes
+        return chore;
+    }
+
+    @DeleteMapping("/{parentId}/chores/{choreId}")
+    public Map<String, String> deleteChore(
+            @PathVariable String parentId,
+            @PathVariable String choreId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        boolean removed = parent.getChores().removeIf(c -> c.getChoreId().equals(choreId));
+
+        if (!removed) {
+            throw new RuntimeException("Chore not found");
+        }
+
+        dataStore.addParent(parent); // Save changes
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Chore deleted successfully");
+        return response;
+    }
+
+    @PutMapping("/{parentId}/store-items/{itemId}")
+    public StoreItem updateStoreItem(
+            @PathVariable String parentId,
+            @PathVariable String itemId,
+            @RequestBody Map<String, Object> request) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        StoreItem item = parent.getStoreInventory().stream()
+                .filter(c -> c.getItemID().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Store Item not found"));
+
+        if (request.containsKey("itemName")) {
+            item.setItemName((String) request.get("itemName"));
+        }
+
+        if (request.containsKey("availableInventory")) {
+            item.setAvailableInventory((Number) request.get("availableInventory"));
+        }
+
+        if (request.containsKey("itemPrice")) {
+            item.setItemPrice(((Number) request.get("itemPrice")).doubleValue());
+        }
+
+        return item;
+    }
+
+    @DeleteMapping("/{parentId}/store-items/{itemId}")
+    public Map<String, String> deleteItem(
+            @PathVariable String parentId,
+            @PathVariable String itemId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        boolean removed = parent.getStoreInventory().removeIf(c -> c.getItemID().equals(itemId));
+
+        if (!removed) {
+            throw new RuntimeException("Item not found");
+        }
+
+        dataStore.addParent(parent);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Item deleted successfully");
+        return response;
     }
 }

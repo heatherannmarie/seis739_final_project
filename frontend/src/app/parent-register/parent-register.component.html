@@ -1,27 +1,7 @@
 <p>parent-register works!</p>
 
 <form (ngSubmit)="onSubmit()">
-    <fieldset>
-        <legend>New User? Register Now!</legend>
-        <label for="firstName">First Name:</label>
-        <input type="text" id="name" name="firstName" required><br><br>
-
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="name" name="lastName" required><br><br>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="userEmail" required><br><br>
-
-        <label for="userName">Username:</label>
-        <input type="text" id="name" name="userName" required><br><br>
-
-        <label for="password">Password</label>
-        <input type="password" id="password" name="userPassword" required><br><br>
-
-        <label for="password">Confirm Password</label>
-        <input type="password" id ="password" name="confirmedPassword" required><br><br>
-
-        <input type="submit" value="Submit">
-        <input type="reset" value="Clear Form">
-    </fieldset>
+    <label for="name">Name:</label>
+    <input type="text" id="name" [(ngModel)]="parentName" name="name" required>
+    <button type="submit">Register</button>
 </form>
