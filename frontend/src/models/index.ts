@@ -14,7 +14,12 @@ export interface Transaction {
     timestamp: string; // ISO date string
 }
 
-// Chore model matching Chore.java
+export enum ChoreStatus {
+    AVAILABLE = 'AVAILABLE',
+    PENDING = 'PENDING',
+    COMPLETED = 'COMPLETED'
+}
+
 export interface Chore {
     choreId: string;
     choreName: string;
@@ -22,6 +27,7 @@ export interface Chore {
     chorePrice: number;
     assignedChildId: string | null;
     available: boolean;
+    status: ChoreStatus;  // Add this
 }
 
 // StoreItem model matching StoreItem.java

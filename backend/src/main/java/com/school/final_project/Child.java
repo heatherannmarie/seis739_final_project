@@ -1,6 +1,8 @@
 package com.school.final_project;
 
 import jakarta.persistence.*;
+import com.school.final_project.ChoreStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -107,7 +109,7 @@ public class Child {
 
     public List<Chore> viewAvailableChores() {
         return parent.getChores().stream()
-                .filter(Chore::isAvailable)
+                .filter(c -> c.getStatus() == ChoreStatus.AVAILABLE)
                 .toList();
     }
 
@@ -121,7 +123,7 @@ public class Child {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Chore not found"));
 
-        if (!chore.isAvailable()) {
+        if (chore.getStatus() != ChoreStatus.AVAILABLE) {
             throw new RuntimeException("Chore is not available");
         }
 
@@ -167,8 +169,12 @@ public class Child {
                 java.time.LocalDateTime.now());
 
         this.transactionHistory.add(transaction);
-        parent.getTransactions().add(transaction);
+        parent.addTransaction(transaction);
 
         return transaction;
+    }
+
+    public void addTransaction(Transaction transaction) {
+        this.transactionHistory.add(transaction);
     }
 }

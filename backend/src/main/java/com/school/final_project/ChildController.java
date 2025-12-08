@@ -2,6 +2,9 @@ package com.school.final_project;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import main.java.com.school.final_project.ChoreStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,5 +75,32 @@ public class ChildController {
         }
 
         return parent.getStoreInventory();
+    }
+
+    @PostMapping("/{childId}/chores/{choreId}/request-completion")
+    public Chore requestChoreCompletion(
+            @PathVariable String childId,
+            @PathVariable String choreId) {
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            throw new RuntimeException("Child not found");
+        }
+
+        Parent parent = dataStore.getParent(child.getParentId());
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Chore chore = parent.getChores().stream()
+                .filter(c -> c.getChoreId().equals(choreId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Chore not found"));
+
+        chore.setAssignedChildId(childId);
+        chore.setStatus(ChoreStatus.PENDING);
+
+        dataStore.addParent(parent);
+        return chore;
     }
 }

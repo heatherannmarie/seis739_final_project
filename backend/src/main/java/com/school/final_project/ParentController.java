@@ -2,9 +2,13 @@ package com.school.final_project;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import main.java.com.school.final_project.ChoreStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/parents")
@@ -75,10 +79,10 @@ public class ParentController {
                 (String) request.get("choreDescription"),
                 ((Number) request.get("chorePrice")).doubleValue(),
                 (String) request.get("assignedChildId"),
-                true,
                 choreId);
 
         parent.addChore(chore);
+        dataStore.addParent(parent); // Add this line!
         return chore;
     }
 
@@ -109,6 +113,7 @@ public class ParentController {
                 itemId);
 
         parent.addStoreItem(item);
+        dataStore.addParent(parent); // Add this line!
         return item;
     }
 
@@ -211,11 +216,11 @@ public class ParentController {
         }
 
         if (request.containsKey("availableInventory")) {
-            item.setAvailableInventory((Number) request.get("availableInventory"));
+            item.setAvailableInventory(((Number) request.get("availableInventory")).intValue());
         }
 
         if (request.containsKey("itemPrice")) {
-            item.setItemPrice(((Number) request.get("itemPrice")).doubleValue());
+            item.setItemPrice(((Number) request.get("itemPrice")).floatValue());
         }
 
         return item;
@@ -242,5 +247,73 @@ public class ParentController {
         Map<String, String> response = new HashMap<>();
         response.put("message", "Item deleted successfully");
         return response;
+    }
+
+    @GetMapping("/{parentId}/chores/pending")
+    public ArrayList<Chore> getPendingChores(@PathVariable String parentId) {
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        return parent.getChores().stream()
+                .filter(c -> c.getStatus() == ChoreStatus.PENDING)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @PostMapping("/{parentId}/chores/{choreId}/approve")
+    public Transaction approveChoreCompletion(
+            @PathVariable String parentId,
+            @PathVariable String choreId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Chore chore = parent.getChores().stream()
+                .filter(c -> c.getChoreId().equals(choreId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Chore not found"));
+
+        if (chore.getStatus() != ChoreStatus.PENDING) {
+            throw new RuntimeException("Chore is not pending approval");
+        }
+
+        Child child = dataStore.getChild(chore.getAssignedChildId());
+        if (child == null) {
+            throw new RuntimeException("Child not found");
+        }
+
+        parent.payChildForChore(child, chore);
+
+        chore.setStatus(ChoreStatus.COMPLETED);
+
+        dataStore.addParent(parent);
+        dataStore.addChild(child);
+
+        return parent.getTransactions().get(parent.getTransactions().size() - 1);
+    }
+
+    @PostMapping("/{parentId}/chores/{choreId}/deny")
+    public Chore denyChoreCompletion(
+            @PathVariable String parentId,
+            @PathVariable String choreId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Chore chore = parent.getChores().stream()
+                .filter(c -> c.getChoreId().equals(choreId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Chore not found"));
+
+        chore.setStatus(ChoreStatus.AVAILABLE);
+        chore.setAssignedChildId(null);
+
+        dataStore.addParent(parent);
+        return chore;
     }
 }

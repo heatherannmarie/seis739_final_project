@@ -1,6 +1,7 @@
 package com.school.final_project;
 
 import jakarta.persistence.*;
+import main.java.com.school.final_project.ChoreStatus;
 
 @Entity
 @Table(name = "chores")
@@ -12,24 +13,25 @@ public class Chore {
 
     @Column(unique = true, nullable = false)
     private String choreId;
-
     private String choreName;
     private String choreDescription;
     private double chorePrice;
     private String assignedChildId;
-    private boolean isAvailable;
+    @Enumerated(EnumType.STRING) // Stores as "AVAILABLE", "PENDING", "COMPLETED"
+    @Column(columnDefinition = "VARCHAR(20) DEFAULT 'AVAILABLE'")
+    private ChoreStatus status;
 
     public Chore() {
     }
 
     public Chore(String choreName, String choreDescription, double chorePrice,
-            String assignedChildId, boolean isAvailable, String choreId) {
+            String assignedChildId, String choreId) {
         this.choreName = choreName;
         this.choreDescription = choreDescription;
         this.chorePrice = chorePrice;
         this.assignedChildId = assignedChildId;
-        this.isAvailable = isAvailable;
         this.choreId = choreId;
+        this.status = ChoreStatus.AVAILABLE;
     }
 
     public String getChoreId() {
@@ -52,10 +54,6 @@ public class Chore {
         return assignedChildId;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
     public void setChoreName(String choreName) {
         this.choreName = choreName;
     }
@@ -72,11 +70,15 @@ public class Chore {
         this.assignedChildId = assignedChildId;
     }
 
-    public void setAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
-    }
-
     public void changePrice(double newPrice) {
         this.chorePrice = newPrice;
+    }
+
+    public ChoreStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ChoreStatus status) {
+        this.status = status;
     }
 }

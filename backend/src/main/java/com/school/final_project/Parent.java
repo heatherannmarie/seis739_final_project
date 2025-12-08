@@ -150,8 +150,7 @@ public class Parent {
                 LocalDateTime.now());
 
         this.transactions.add(transaction);
-        child.getTransactionHistory().add(transaction);
+        child.addTransaction(transaction);
         child.addBalance(chore.getChorePrice());
-        chore.setAvailable(false);
     }
 }
