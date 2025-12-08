@@ -42,6 +42,11 @@ export class ParentService {
         return this.http.get<Child[]>(`${this.baseUrl}/${parentId}/children`);
     }
 
+    // Update a child account
+    updateChild(parentId: string, childId: string, request: Partial<CreateChildRequest>): Observable<Child> {
+        return this.http.put<Child>(`${this.baseUrl}/${parentId}/children/${childId}`, request);
+    }
+
     // Add a new chore
     addChore(parentId: string, request: CreateChoreRequest): Observable<Chore> {
         return this.http.post<Chore>(`${this.baseUrl}/${parentId}/chores`, request);
@@ -52,12 +57,57 @@ export class ParentService {
         return this.http.get<Chore[]>(`${this.baseUrl}/${parentId}/chores`);
     }
 
+    // Update a chore
+    updateChore(parentId: string, choreId: string, request: Partial<CreateChoreRequest>): Observable<Chore> {
+        return this.http.put<Chore>(`${this.baseUrl}/${parentId}/chores/${choreId}`, request);
+    }
+
+    // Delete a chore
+    deleteChore(parentId: string, choreId: string): Observable<{ message: string }> {
+        return this.http.delete<{ message: string }>(`${this.baseUrl}/${parentId}/chores/${choreId}`);
+    }
+
+    // Get pending chores
+    getPendingChores(parentId: string): Observable<Chore[]> {
+        return this.http.get<Chore[]>(`${this.baseUrl}/${parentId}/chores/pending`);
+    }
+
+    // Approve chore completion
+    approveChore(parentId: string, choreId: string): Observable<Transaction> {
+        return this.http.post<Transaction>(`${this.baseUrl}/${parentId}/chores/${choreId}/approve`, {});
+    }
+
+    // Deny chore completion
+    denyChore(parentId: string, choreId: string): Observable<Chore> {
+        return this.http.post<Chore>(`${this.baseUrl}/${parentId}/chores/${choreId}/deny`, {});
+    }
+
     // Add a store item
     addStoreItem(parentId: string, request: CreateStoreItemRequest): Observable<StoreItem> {
         return this.http.post<StoreItem>(`${this.baseUrl}/${parentId}/store-items`, request);
     }
 
-    // Pay child for completing a chore
+    // Get all store items
+    getStoreItems(parentId: string): Observable<StoreItem[]> {
+        return this.http.get<StoreItem[]>(`${this.baseUrl}/${parentId}/store-items`);
+    }
+
+    // Update a store item
+    updateStoreItem(parentId: string, itemId: string, request: Partial<CreateStoreItemRequest>): Observable<StoreItem> {
+        return this.http.put<StoreItem>(`${this.baseUrl}/${parentId}/store-items/${itemId}`, request);
+    }
+
+    // Delete a store item
+    deleteStoreItem(parentId: string, itemId: string): Observable<{ message: string }> {
+        return this.http.delete<{ message: string }>(`${this.baseUrl}/${parentId}/store-items/${itemId}`);
+    }
+
+    // Get all transactions
+    getTransactions(parentId: string): Observable<Transaction[]> {
+        return this.http.get<Transaction[]>(`${this.baseUrl}/${parentId}/transactions`);
+    }
+
+    // Pay child for completing a chore (manual payment)
     payChildForChore(parentId: string, request: PayChildRequest): Observable<Transaction> {
         return this.http.post<Transaction>(`${this.baseUrl}/${parentId}/pay-child`, request);
     }

@@ -1,16 +1,62 @@
 <div class="layout">
     <nav class="sidebar">
         <ul>
-            <li><a (click)="activeSection = 'children'">Children</a></li>
-            <li><a (click)="activeSection = 'chores'">Chores</a></li>
-            <li><a (click)="activeSection = 'store'">Store</a></li>
+            <li><a (click)="activeSection = 'children'" [class.active]="activeSection === 'children'">Children</a></li>
+            <li><a (click)="activeSection = 'chores'" [class.active]="activeSection === 'chores'">Chores</a></li>
+            <li><a (click)="activeSection = 'store'" [class.active]="activeSection === 'store'">Store</a></li>
+            <li><a (click)="activeSection = 'transactions'"
+                    [class.active]="activeSection === 'transactions'">Transactions</a></li>
         </ul>
     </nav>
 
     <main class="content">
         @if (activeSection === 'children') {
-        <h1>Child List</h1>
-        <!-- your children cards and form -->
+        <h1>Manage Children</h1>
+
+        <div class="child-grid">
+            @for (child of children; track child.childId) {
+            <div class="child-card">
+                @if (editingChild?.childId === child.childId) {
+                <form (ngSubmit)="saveChildEdit()">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" [(ngModel)]="editChildName" name="editChildName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" [(ngModel)]="editChildUsername" name="editChildUsername" required>
+                    </div>
+                    <div class="edit-actions">
+                        <button type="submit" class="save-btn">Save</button>
+                        <button type="button" (click)="cancelChildEdit()" class="cancel-btn">Cancel</button>
+                    </div>
+                </form>
+                } @else {
+                <h3>{{ child.name }}</h3>
+                <p class="username">@{{ child.username }}</p>
+                <p class="balance">Balance: <strong>${{ child.balance.toFixed(2) }}</strong></p>
+                <p class="child-id">ID: {{ child.childId }}</p>
+                <button (click)="startChildEdit(child)" class="edit-btn">Edit</button>
+                }
+            </div>
+            }
+        </div>
+
+        <div class="add-child-form">
+            <h3>Add New Child</h3>
+            <form (ngSubmit)="createChildOnSubmit()">
+                <div class="form-group">
+                    <label for="newChildName">Name</label>
+                    <input type="text" id="newChildName" [(ngModel)]="newChildName" name="newChildName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newChildUsername">Username</label>
+                    <input type="text" id="newChildUsername" [(ngModel)]="newChildUsername" name="newChildUsername"
+                        required>
+                </div>
+                <button type="submit" class="add-btn">Add Child</button>
+            </form>
+        </div>
         }
 
         @if (activeSection === 'chores') {
@@ -19,6 +65,10 @@
 
         @if (activeSection === 'store') {
         <app-storefront></app-storefront>
+        }
+
+        @if (activeSection === 'transactions') {
+        <app-transactions [transactions]="transactions"></app-transactions>
         }
     </main>
 </div>

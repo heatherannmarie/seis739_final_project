@@ -35,4 +35,14 @@ export class ChildService {
     getStoreItems(childId: string): Observable<StoreItem[]> {
         return this.http.get<StoreItem[]>(`${this.baseUrl}/${childId}/store-items`);
     }
+
+    // Request chore completion (mark as pending)
+    requestChoreCompletion(childId: string, choreId: string): Observable<Chore> {
+        return this.http.post<Chore>(`${this.baseUrl}/${childId}/chores/${choreId}/request-completion`, {});
+    }
+
+    // Purchase an item from the store
+    purchaseItem(childId: string, itemId: string): Observable<Transaction> {
+        return this.http.post<Transaction>(`${this.baseUrl}/${childId}/purchase/${itemId}`, {});
+    }
 }

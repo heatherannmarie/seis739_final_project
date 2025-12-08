@@ -120,16 +120,44 @@ public class Parent {
         this.transactions = transactions;
     }
 
+    // Methods that modify the actual lists (not copies)
+
     public void addChore(Chore chore) {
         chores.add(chore);
+    }
+
+    public boolean removeChore(String choreId) {
+        return chores.removeIf(c -> c.getChoreId().equals(choreId));
+    }
+
+    public Chore getChoreById(String choreId) {
+        return chores.stream()
+                .filter(c -> c.getChoreId().equals(choreId))
+                .findFirst()
+                .orElse(null);
     }
 
     public void addStoreItem(StoreItem item) {
         storeInventory.add(item);
     }
 
+    public boolean removeStoreItem(String itemId) {
+        return storeInventory.removeIf(i -> i.getItemID().equals(itemId));
+    }
+
+    public StoreItem getStoreItemById(String itemId) {
+        return storeInventory.stream()
+                .filter(i -> i.getItemID().equals(itemId))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
+    }
+
+    public void addChild(Child child) {
+        children.add(child);
     }
 
     public Child createChildAccount(String childName, String userName, String childId) {

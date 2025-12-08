@@ -3,8 +3,6 @@ package com.school.final_project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import main.java.com.school.final_project.ChoreStatus;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +29,11 @@ public class ParentController {
 
     @GetMapping("/{parentId}")
     public Parent getParent(@PathVariable String parentId) {
-        return dataStore.getParent(parentId);
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+        return parent;
     }
 
     @PostMapping("/{parentId}/children")
@@ -49,6 +51,7 @@ public class ParentController {
         String username = request.get("username");
 
         Child child = parent.createChildAccount(childName, username, childId);
+        dataStore.addParent(parent);
         dataStore.addChild(child);
 
         return child;
@@ -61,6 +64,37 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
         return parent.getChildren();
+    }
+
+    @PutMapping("/{parentId}/children/{childId}")
+    public Child updateChild(
+            @PathVariable String parentId,
+            @PathVariable String childId,
+            @RequestBody Map<String, String> request) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            throw new RuntimeException("Child not found");
+        }
+
+        if (!child.getParentId().equals(parentId)) {
+            throw new RuntimeException("Child does not belong to this parent");
+        }
+
+        if (request.containsKey("name")) {
+            child.setName(request.get("name"));
+        }
+        if (request.containsKey("username")) {
+            child.setUsername(request.get("username"));
+        }
+
+        dataStore.addChild(child);
+        return child;
     }
 
     @PostMapping("/{parentId}/chores")
@@ -82,7 +116,7 @@ public class ParentController {
                 choreId);
 
         parent.addChore(chore);
-        dataStore.addParent(parent); // Add this line!
+        dataStore.addParent(parent);
         return chore;
     }
 
@@ -93,6 +127,61 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
         return parent.getChores();
+    }
+
+    @PutMapping("/{parentId}/chores/{choreId}")
+    public Chore updateChore(
+            @PathVariable String parentId,
+            @PathVariable String choreId,
+            @RequestBody Map<String, Object> request) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Chore chore = parent.getChoreById(choreId);
+        if (chore == null) {
+            throw new RuntimeException("Chore not found");
+        }
+
+        if (request.containsKey("choreName")) {
+            chore.setChoreName((String) request.get("choreName"));
+        }
+        if (request.containsKey("choreDescription")) {
+            chore.setChoreDescription((String) request.get("choreDescription"));
+        }
+        if (request.containsKey("chorePrice")) {
+            chore.setChorePrice(((Number) request.get("chorePrice")).doubleValue());
+        }
+        if (request.containsKey("assignedChildId")) {
+            chore.setAssignedChildId((String) request.get("assignedChildId"));
+        }
+
+        dataStore.addParent(parent);
+        return chore;
+    }
+
+    @DeleteMapping("/{parentId}/chores/{choreId}")
+    public Map<String, String> deleteChore(
+            @PathVariable String parentId,
+            @PathVariable String choreId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        boolean removed = parent.removeChore(choreId);
+        if (!removed) {
+            throw new RuntimeException("Chore not found");
+        }
+
+        dataStore.addParent(parent);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Chore deleted successfully");
+        return response;
     }
 
     @PostMapping("/{parentId}/store-items")
@@ -113,86 +202,17 @@ public class ParentController {
                 itemId);
 
         parent.addStoreItem(item);
-        dataStore.addParent(parent); // Add this line!
+        dataStore.addParent(parent);
         return item;
     }
 
-    @PostMapping("/{parentId}/pay-child")
-    public Transaction payChildForChore(
-            @PathVariable String parentId,
-            @RequestBody Map<String, String> request) {
-
-        Parent parent = dataStore.getParent(parentId);
-        String childId = request.get("childId");
-        String choreId = request.get("choreId");
-
-        Child child = dataStore.getChild(childId);
-
-        Chore chore = parent.getChores().stream()
-                .filter(c -> c.getChoreId().equals(choreId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Chore not found"));
-
-        parent.payChildForChore(child, chore);
-
-        return parent.getTransactions().get(parent.getTransactions().size() - 1);
-    }
-
-    @PutMapping("/{parentId}/chores/{choreId}")
-    public Chore updateChore(
-            @PathVariable String parentId,
-            @PathVariable String choreId,
-            @RequestBody Map<String, Object> request) {
-
+    @GetMapping("/{parentId}/store-items")
+    public ArrayList<StoreItem> getStoreItems(@PathVariable String parentId) {
         Parent parent = dataStore.getParent(parentId);
         if (parent == null) {
             throw new RuntimeException("Parent not found");
         }
-
-        Chore chore = parent.getChores().stream()
-                .filter(c -> c.getChoreId().equals(choreId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Chore not found"));
-
-        // Update fields if they're provided in the request
-        if (request.containsKey("choreName")) {
-            chore.setChoreName((String) request.get("choreName"));
-        }
-        if (request.containsKey("choreDescription")) {
-            chore.setChoreDescription((String) request.get("choreDescription"));
-        }
-        if (request.containsKey("chorePrice")) {
-            chore.setChorePrice(((Number) request.get("chorePrice")).doubleValue());
-        }
-        if (request.containsKey("assignedChildId")) {
-            chore.setAssignedChildId((String) request.get("assignedChildId"));
-        }
-
-        dataStore.addParent(parent); // Save changes
-        return chore;
-    }
-
-    @DeleteMapping("/{parentId}/chores/{choreId}")
-    public Map<String, String> deleteChore(
-            @PathVariable String parentId,
-            @PathVariable String choreId) {
-
-        Parent parent = dataStore.getParent(parentId);
-        if (parent == null) {
-            throw new RuntimeException("Parent not found");
-        }
-
-        boolean removed = parent.getChores().removeIf(c -> c.getChoreId().equals(choreId));
-
-        if (!removed) {
-            throw new RuntimeException("Chore not found");
-        }
-
-        dataStore.addParent(parent); // Save changes
-
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Chore deleted successfully");
-        return response;
+        return parent.getStoreInventory();
     }
 
     @PutMapping("/{parentId}/store-items/{itemId}")
@@ -206,28 +226,27 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
 
-        StoreItem item = parent.getStoreInventory().stream()
-                .filter(c -> c.getItemID().equals(itemId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Store Item not found"));
+        StoreItem item = parent.getStoreItemById(itemId);
+        if (item == null) {
+            throw new RuntimeException("Store item not found");
+        }
 
         if (request.containsKey("itemName")) {
             item.setItemName((String) request.get("itemName"));
         }
-
         if (request.containsKey("availableInventory")) {
             item.setAvailableInventory(((Number) request.get("availableInventory")).intValue());
         }
-
         if (request.containsKey("itemPrice")) {
             item.setItemPrice(((Number) request.get("itemPrice")).floatValue());
         }
 
+        dataStore.addParent(parent);
         return item;
     }
 
     @DeleteMapping("/{parentId}/store-items/{itemId}")
-    public Map<String, String> deleteItem(
+    public Map<String, String> deleteStoreItem(
             @PathVariable String parentId,
             @PathVariable String itemId) {
 
@@ -236,17 +255,56 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
 
-        boolean removed = parent.getStoreInventory().removeIf(c -> c.getItemID().equals(itemId));
-
+        boolean removed = parent.removeStoreItem(itemId);
         if (!removed) {
-            throw new RuntimeException("Item not found");
+            throw new RuntimeException("Store item not found");
         }
 
         dataStore.addParent(parent);
 
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Item deleted successfully");
+        response.put("message", "Store item deleted successfully");
         return response;
+    }
+
+    @GetMapping("/{parentId}/transactions")
+    public ArrayList<Transaction> getTransactions(@PathVariable String parentId) {
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+        return parent.getTransactions();
+    }
+
+    @PostMapping("/{parentId}/pay-child")
+    public Transaction payChildForChore(
+            @PathVariable String parentId,
+            @RequestBody Map<String, String> request) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        String childId = request.get("childId");
+        String choreId = request.get("choreId");
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            throw new RuntimeException("Child not found");
+        }
+
+        Chore chore = parent.getChoreById(choreId);
+        if (chore == null) {
+            throw new RuntimeException("Chore not found");
+        }
+
+        parent.payChildForChore(child, chore);
+
+        dataStore.addParent(parent);
+        dataStore.addChild(child);
+
+        return parent.getTransactions().get(parent.getTransactions().size() - 1);
     }
 
     @GetMapping("/{parentId}/chores/pending")
@@ -271,10 +329,10 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
 
-        Chore chore = parent.getChores().stream()
-                .filter(c -> c.getChoreId().equals(choreId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Chore not found"));
+        Chore chore = parent.getChoreById(choreId);
+        if (chore == null) {
+            throw new RuntimeException("Chore not found");
+        }
 
         if (chore.getStatus() != ChoreStatus.PENDING) {
             throw new RuntimeException("Chore is not pending approval");
@@ -286,7 +344,6 @@ public class ParentController {
         }
 
         parent.payChildForChore(child, chore);
-
         chore.setStatus(ChoreStatus.COMPLETED);
 
         dataStore.addParent(parent);
@@ -305,10 +362,10 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
 
-        Chore chore = parent.getChores().stream()
-                .filter(c -> c.getChoreId().equals(choreId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Chore not found"));
+        Chore chore = parent.getChoreById(choreId);
+        if (chore == null) {
+            throw new RuntimeException("Chore not found");
+        }
 
         chore.setStatus(ChoreStatus.AVAILABLE);
         chore.setAssignedChildId(null);

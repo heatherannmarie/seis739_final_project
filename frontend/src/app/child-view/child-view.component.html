@@ -1,17 +1,54 @@
 <div class="layout">
     <nav class="sidebar">
         <ul>
-            <li><a (click)="activeSection = 'account'">My Account</a></li>
-            <li><a (click)="activeSection = 'chores'">Chores</a></li>
-            <li><a (click)="activeSection = 'store'">Store</a></li>
+            <li><a (click)="activeSection = 'account'" [class.active]="activeSection === 'account'">My Account</a></li>
+            <li><a (click)="activeSection = 'chores'" [class.active]="activeSection === 'chores'">Chores</a></li>
+            <li><a (click)="activeSection = 'store'" [class.active]="activeSection === 'store'">Store</a></li>
+            <li><a (click)="activeSection = 'history'" [class.active]="activeSection === 'history'">History</a></li>
         </ul>
     </nav>
 
     <main class="content">
         @if (activeSection === 'account') {
-        <h1>Child List</h1>
-        <!-- your children cards and form -->
-        }
+        <div class="account-section">
+            <h1>My Account</h1>
+
+            @if (child) {
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="avatar">{{ child.name.charAt(0).toUpperCase() }}</div>
+                    <div class="account-info">
+                        <h2>{{ child.name }}</h2>
+                        <p class="username">@{{ child.username }}</p>
+                    </div>
+                </div>
+
+                <div class="balance-display">
+                    <span class="balance-label">Current Balance</span>
+                    <span class="balance-amount">${{ child.balance.toFixed(2) }}</span>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat">
+                        <span class="stat-value">{{ completedChoresCount }}</span>
+                        <span class="stat-label">Chores Done</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ pendingChoresCount }}</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ purchaseCount }}</span>
+                        <span class="stat-label">Purchases</span>
+                    </div>
+                </div>
+            </div>
+            } @else {
+            <p>Loading account information...</p>
+            }
+        </div>
+    }
+
 
         @if (activeSection === 'chores') {
         <app-chore-list [chores]="chores" mode="child"></app-chore-list>
@@ -20,5 +57,10 @@
         @if (activeSection === 'store') {
         <app-storefront></app-storefront>
         }
+
+        @if (activeSection === 'history') {
+        <app-transactions [transactions]="transactions"></app-transactions>
+        }
     </main>
+
 </div>

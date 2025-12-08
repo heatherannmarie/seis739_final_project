@@ -3,8 +3,7 @@ package com.school.final_project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import main.java.com.school.final_project.ChoreStatus;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,15 +91,65 @@ public class ChildController {
             throw new RuntimeException("Parent not found");
         }
 
-        Chore chore = parent.getChores().stream()
-                .filter(c -> c.getChoreId().equals(choreId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Chore not found"));
+        Chore chore = parent.getChoreById(choreId);
+        if (chore == null) {
+            throw new RuntimeException("Chore not found");
+        }
 
         chore.setAssignedChildId(childId);
         chore.setStatus(ChoreStatus.PENDING);
 
         dataStore.addParent(parent);
         return chore;
+    }
+
+    @PostMapping("/{childId}/purchase/{itemId}")
+    public Transaction purchaseItem(
+            @PathVariable String childId,
+            @PathVariable String itemId) {
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            throw new RuntimeException("Child not found");
+        }
+
+        Parent parent = dataStore.getParent(child.getParentId());
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        StoreItem item = parent.getStoreItemById(itemId);
+        if (item == null) {
+            throw new RuntimeException("Item not found");
+        }
+
+        if (!item.isAvailable()) {
+            throw new RuntimeException("Item is out of stock");
+        }
+
+        if (child.getBalance() < item.getItemPrice()) {
+            throw new RuntimeException("Insufficient balance");
+        }
+
+        // Process the purchase
+        item.purchase();
+        child.subtractBalance(item.getItemPrice());
+
+        // Create transaction record
+        Transaction transaction = new Transaction(
+                TransactionType.PURCHASE,
+                (float) item.getItemPrice(),
+                childId,
+                "Purchased: " + item.getItemName(),
+                LocalDateTime.now());
+
+        child.addTransaction(transaction);
+        parent.addTransaction(transaction);
+
+        // Save changes
+        dataStore.addChild(child);
+        dataStore.addParent(parent);
+
+        return transaction;
     }
 }

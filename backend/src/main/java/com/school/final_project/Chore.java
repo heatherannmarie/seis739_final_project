@@ -1,7 +1,7 @@
 package com.school.final_project;
 
 import jakarta.persistence.*;
-import main.java.com.school.final_project.ChoreStatus;
+import com.school.final_project.ChoreStatus;
 
 @Entity
 @Table(name = "chores")
