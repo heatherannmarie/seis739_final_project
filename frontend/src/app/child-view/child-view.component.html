@@ -1,10 +1,24 @@
-<main>
-    <nav>
-        <p>Balance</p>
-        <p>Chores</p>
-        <p>Store</p>
+<div class="layout">
+    <nav class="sidebar">
+        <ul>
+            <li><a (click)="activeSection = 'children'">Children</a></li>
+            <li><a (click)="activeSection = 'chores'">Chores</a></li>
+            <li><a (click)="activeSection = 'store'">Store</a></li>
+        </ul>
     </nav>
-    <section>
-        <p>Display changes based on nav selection</p>
-    </section>
-</main>
+
+    <main class="content">
+        @if (activeSection === 'children') {
+        <h1>Child List</h1>
+        <!-- your children cards and form -->
+        }
+
+        @if (activeSection === 'chores') {
+        <app-chore-list [chores]="chores" mode="child"></app-chore-list>
+        }
+
+        @if (activeSection === 'store') {
+        <app-storefront></app-storefront>
+        }
+    </main>
+</div>

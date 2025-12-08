@@ -1,31 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ChildService } from '../services';
+import { ChoreListComponent } from '../chore-list/chore-list.component';
+import { RouterLink } from '@angular/router';
+import { StorefrontComponent } from '../storefront/storefront.component';
+
 
 @Component({
   selector: 'app-child-view',
-  imports: [],
+  imports: [ChoreListComponent, StorefrontComponent],
   templateUrl: './child-view.component.html',
   styleUrl: './child-view.component.css'
 })
-export class ChildViewComponent {
+export class ChildViewComponent implements OnInit {
   // Dashboard for child accounts
-  child = {
-    name: 'Freddie',
-    balance: 47,
-    username: 'freddie123'
-  };
+  private childService = inject(ChildService);
 
-  recentTransactions = [
-    { description: 'Completed: Take out trash', amount: 5, date: '2024-12-05', type: 'earned' },
-    { description: 'Purchased: Extra Screen Time', amount: -10, date: '2024-12-04', type: 'spent' },
-    { description: 'Completed: Do dishes', amount: 10, date: '2024-12-03', type: 'earned' },
-    { description: 'Completed: Vacuum living room', amount: 15, date: '2024-12-01', type: 'earned' },
-    { description: 'Purchased: Movie Night Pick', amount: -20, date: '2024-11-28', type: 'spent' },
-  ];
+  activeSection: 'children' | 'chores' | 'store' = 'children';
+  child: any;
+  chores: any [] = [];
+  storeItems: any[] = [];
+  transactions: any[] = [];
 
-  availableChores = [
-    { name: 'Clean bathroom', points: 20 },
-    { name: 'Rake leaves', points: 15 },
-    { name: 'Fold laundry', points: 10 },
-  ];
+  ngOnInit() {
+    this.childService.getChild("child_1764733929203").subscribe({
+      next: (data) => this.child = data,
+      error: (err) => console.error("Failed to load child data:", err),
+    })
+
+    this.childService.getAvailableChores("child_1764733929203").subscribe({
+      next: (data) => this.chores = data,
+      error: (err) => console.error("Failed to load chore data:", err),
+    })
+
+    this.childService.getStoreItems("child_1764733929203").subscribe({
+      next: (data) => this.storeItems = data,
+      error: (err) => console.error("Failed to load store data:", err),
+    })
+
+    this.childService.getTransactions("child_1764733929203").subscribe({
+      next: (data) => this.transactions = data,
+      error: (err) => console.error("Failed to load transactions:", err),
+    })
+  }
 
 }

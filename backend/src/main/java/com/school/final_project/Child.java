@@ -3,6 +3,7 @@ package com.school.final_project;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "children")
@@ -19,6 +20,7 @@ public class Child {
     private String username;
     private double balance;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "parent_id", nullable = false)
     private Parent parent;

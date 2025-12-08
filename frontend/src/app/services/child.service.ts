@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Child, Chore, StoreItem, Transaction, BalanceResponse } from '../models';
+import { Child, Chore, StoreItem, Transaction, BalanceResponse } from '../../models';
 import { environment } from '../../environments/environment';
 
 @Injectable({

@@ -12,7 +12,7 @@ import {
     CreateChoreRequest,
     CreateStoreItemRequest,
     PayChildRequest
-} from '../models';
+} from '../../models';
 import { environment } from '../../environments/environment';
 
 @Injectable({

@@ -1,12 +1,24 @@
-<h1>Child List</h1>
-<div class="child-list">
-    @for (child of children; track child.name) {
-    <div class="child-card">
-        <h2>{{ child.name }}</h2>
-        <p>Allowance: {{ child.totalAllowance }}</p>
-    </div>
-    }
-</div>
+<div class="layout">
+    <nav class="sidebar">
+        <ul>
+            <li><a (click)="activeSection = 'children'">Children</a></li>
+            <li><a (click)="activeSection = 'chores'">Chores</a></li>
+            <li><a (click)="activeSection = 'store'">Store</a></li>
+        </ul>
+    </nav>
 
-<h1>Chore List</h1>
-<app-chore-list></app-chore-list>
+    <main class="content">
+        @if (activeSection === 'children') {
+        <h1>Child List</h1>
+        <!-- your children cards and form -->
+        }
+
+        @if (activeSection === 'chores') {
+        <app-chore-list [chores]="chores" mode="parent"></app-chore-list>
+        }
+
+        @if (activeSection === 'store') {
+        <app-storefront></app-storefront>
+        }
+    </main>
+</div>

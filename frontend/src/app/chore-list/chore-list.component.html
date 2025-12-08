@@ -3,6 +3,31 @@
     <div class="chore-card">
         <h3>{{ chore.name }}</h3>
         <p>Points: {{ chore.points }}</p>
+
+        @if (mode === 'parent') {
+        <button>Edit</button>
+        <button>Approve Completion</button>
+        } @else {
+        <button>Request Completion</button>
+        }
     </div>
     }
+
+    <form (ngSubmit)="onSubmit()">
+        <h2>Add Chore</h2>
+
+        <label for="chore">Chore Name</label>
+        <input type="text" id="choreName" [(ngModel)]="choreName" name="choreName" required>
+
+        <label for="chorePrice">Chore Price</label>
+        <input type="number" id="chorePrice" [(ngModel)]="chorePrice" name="chorePrice" required>
+
+        <label for="choreDescription">Description</label>
+        <input type="text" id="choreDescription" [(ngModel)]="choreDescription" name="choreDescription" required>
+
+        <label for="assignedChild">Assigned Child</label>
+        <input type="text" id="assignedChild" [(ngModel)]="assignedChild" name="assignedChild" required>
+
+        <button type="submit">Add Item</button>
+    </form>
 </div>

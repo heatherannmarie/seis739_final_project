@@ -1,1 +1,14 @@
 <p>child-login works!</p>
+
+<form (ngSubmit)="onSubmit()">
+    <h2>Child Login</h2>
+
+    <label for="childId">Child ID</label>
+    <input type="text" id="childId" [(ngModel)]="childId" name="childId" required>
+
+    @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+    }
+
+    <button type="submit">Log In</button>
+</form>

@@ -1,19 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { ParentService } from '../services';
+import { ChildService } from '../services';
+import { AuthService } from '../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-chore-list',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './chore-list.component.html',
   styleUrl: './chore-list.component.css'
 })
 export class ChoreListComponent {
-  // Needs to display list of chores and allow kids to select them for themselves, as well as allow parents to edit aspects of the chores
+  private parentService = inject(ParentService);
+  private childService = inject(ChildService);
+  private authService = inject(AuthService);
 
-  chores = [
-    { name: 'Take out trash', points: 5, assignedTo: '' },
-    { name: 'Do dishes', points: 10, assignedTo: '' },
-    { name: 'Vacuum living room', points: 15, assignedTo: '' },
-    { name: 'Feed the dog', points: 5, assignedTo: '' },
-  ];
+  @Input() chores: any[] = [];
+  @Input() mode: 'parent' | 'child' = 'child';
 
+  choreName: string = "";
+  choreDescription: string = "";
+  chorePrice: number = 1;
+  assignedChild: string = "";
+
+  onSubmit() {
+    const parentId = this.authService.getParentId();
+
+    if (!parentId) {
+      console.error('No parent logged in');
+      return;
+    }
+
+    this.parentService.addChore(parentId, {
+      choreName: this.choreName,
+      choreDescription: this.choreDescription,
+      chorePrice: this.chorePrice,
+      assignedChildId: this.assignedChild
+    }).subscribe({
+      next: (item) => {
+        console.log("Creating chore:", item);
+        this.chores.push(item);
+        this.choreName = "";
+        this.choreDescription = "";
+        this.chorePrice = 1;
+        this.assignedChild = "";
+      },
+      error: (err) => console.error("Failed to create chore:", err)
+    });
+  }
 }
