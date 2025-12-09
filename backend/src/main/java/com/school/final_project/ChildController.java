@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,6 +16,9 @@ public class ChildController {
 
     @Autowired
     private DataSharing dataStore;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @GetMapping("/{childId}")
     public Child getChild(@PathVariable String childId) {
@@ -38,12 +42,12 @@ public class ChildController {
     }
 
     @GetMapping("/{childId}/transactions")
-    public ArrayList<Transaction> getTransactions(@PathVariable String childId) {
+    public List<Transaction> getTransactions(@PathVariable String childId) {
         Child child = dataStore.getChild(childId);
         if (child == null) {
             throw new RuntimeException("Child not found");
         }
-        return child.getTransactionHistory();
+        return transactionRepository.findByChildId(childId);
     }
 
     @GetMapping("/{childId}/available-chores")

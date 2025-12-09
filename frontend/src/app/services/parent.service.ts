@@ -111,4 +111,9 @@ export class ParentService {
     payChildForChore(parentId: string, request: PayChildRequest): Observable<Transaction> {
         return this.http.post<Transaction>(`${this.baseUrl}/${parentId}/pay-child`, request);
     }
+
+    // Add allowance to a child
+    addAllowance(parentId: string, childId: string, amount: number): Observable<Child> {
+        return this.http.post<Child>(`${this.baseUrl}/${parentId}/children/${childId}/add-allowance`, { amount });
+    }
 }

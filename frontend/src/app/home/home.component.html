@@ -1,17 +1,20 @@
 <main>
-    <section>
-        <h1>Safe Spend Allowance Manager</h1>
+    <section id="salesPitch">
+        <h1>A way to safely manage your child's allowance in a digital world</h1>
     </section>
     <section class="login">
         <section class="parentlogin">
             <h3>For Parents</h3>
-            <p>Marketing text</p>
-            <p>More Marketing text</p>
-            <button [routerLink]="['/parentlogin']">Sign Up or Log In</button>
+            <p>Manage your child's allowance with a free account!</p>
+            <div class="button-group">
+                <button id="parentRegister" [routerLink]="['/register']">Sign Up</button>
+                <button id="parentLogin" [routerLink]="['/parentlogin']">Log In</button>
+            </div>
         </section>
         <section class="childlogin">
             <h3>For Kids</h3>
-            <button [routerLink]="['/childlogin']">Log In</button>
+            <p>Log in to view chores and claim rewards!</p>
+            <button id="childLogin" [routerLink]="['/childlogin']">Log In</button>
         </section>
     </section>
 </main>

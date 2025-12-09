@@ -2,6 +2,7 @@ package com.school.final_project;
 
 import jakarta.persistence.*;
 import com.school.final_project.ChoreStatus;
+import jakarta.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +31,7 @@ public class Child {
     @Column(name = "parent_id_string")
     private String parentIdString;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "child_id")
+    @Transient
     private List<Transaction> transactionHistory = new ArrayList<>();
 
     public Child() {

@@ -1,10 +1,12 @@
 <header>
   <h1>
-    <a routerLink="/home">Safe Spend</a>
+    <a id="appTitle" routerLink="/home">Safe Spend</a>
   </h1>
-  <button (click)="logout()">Log Out</button>
+  <button id="logout" (click)="logout()">Log Out</button>
 </header>
+
 <router-outlet></router-outlet>
+
 <footer>
   <p>Safe Spend links and info</p>
 </footer>

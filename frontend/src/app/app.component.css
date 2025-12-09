@@ -1,33 +1,22 @@
-.layout {
+header {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 10px 20px;
 }
 
-.sidebar {
-    width: 200px;
-    background: #333;
-    min-height: 100vh;
-    padding: 1rem;
+#appTitle {
+    font-size: 60pt;
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
+#logout {
+    position: absolute;
+    right: 20px;
 }
 
-.sidebar li {
-    margin-bottom: 1rem;
-}
-
-.sidebar a {
-    color: white;
-    text-decoration: none;
-}
-
-.sidebar a:hover {
-    text-decoration: underline;
-}
-
-.content {
-    flex: 1;
-    padding: 1rem;
+footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px;
 }

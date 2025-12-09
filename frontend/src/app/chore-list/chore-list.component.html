@@ -1,18 +1,30 @@
 <div class="chore-grid">
-    @for (chore of chores; track chore.name) {
+    @for (chore of chores; track chore.choreId) {
     <div class="chore-card">
-        <h3>{{ chore.name }}</h3>
-        <p>Points: {{ chore.points }}</p>
+        <h3>{{ chore.choreName }}</h3>
+        <p>{{ chore.choreDescription }}</p>
+        <p>Price: ${{ chore.chorePrice }}</p>
+        <p>Status: {{ chore.status }}</p>
 
         @if (mode === 'parent') {
         <button>Edit</button>
-        <button>Approve Completion</button>
+        @if (chore.status === 'PENDING') {
+        <button (click)="approveChore(chore.choreId)">Approve Completion</button>
+        <button (click)="denyChore(chore.choreId)">Deny</button>
+        }
         } @else {
-        <button>Request Completion</button>
+        @if (chore.status === 'AVAILABLE') {
+        <button (click)="requestCompletion(chore.choreId)">Request Completion</button>
+        } @else if (chore.status === 'PENDING') {
+        <span class="pending-badge">Awaiting Approval</span>
+        } @else {
+        <span class="completed-badge">Completed</span>
+        }
         }
     </div>
     }
 
+    @if (mode === 'parent') {
     <form (ngSubmit)="onSubmit()">
         <h2>Add Chore</h2>
 
@@ -28,6 +40,7 @@
         <label for="assignedChild">Assigned Child</label>
         <input type="text" id="assignedChild" [(ngModel)]="assignedChild" name="assignedChild" required>
 
-        <button type="submit">Add Item</button>
+        <button type="submit">Add Chore</button>
     </form>
+    }
 </div>

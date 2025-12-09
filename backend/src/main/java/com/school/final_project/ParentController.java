@@ -3,6 +3,8 @@ package com.school.final_project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.school.final_project.ChoreStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +54,6 @@ public class ParentController {
 
         Child child = parent.createChildAccount(childName, username, childId);
         dataStore.addParent(parent);
-        dataStore.addChild(child);
 
         return child;
     }
@@ -372,5 +373,45 @@ public class ParentController {
 
         dataStore.addParent(parent);
         return chore;
+    }
+
+    @PostMapping("/{parentId}/children/{childId}/add-allowance")
+    public Child addAllowance(
+            @PathVariable String parentId,
+            @PathVariable String childId,
+            @RequestBody Map<String, Object> request) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            throw new RuntimeException("Parent not found");
+        }
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            throw new RuntimeException("Child not found");
+        }
+
+        if (!child.getParentId().equals(parentId)) {
+            throw new RuntimeException("Child does not belong to this parent");
+        }
+
+        double amount = ((Number) request.get("amount")).doubleValue();
+        child.addBalance(amount);
+
+        // Create transaction record
+        Transaction transaction = new Transaction(
+                TransactionType.ALLOWANCE,
+                (float) amount,
+                childId,
+                "Allowance from parent",
+                java.time.LocalDateTime.now());
+
+        child.addTransaction(transaction);
+        parent.addTransaction(transaction);
+
+        dataStore.addChild(child);
+        dataStore.addParent(parent);
+
+        return child;
     }
 }

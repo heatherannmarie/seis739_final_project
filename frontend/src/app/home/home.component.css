@@ -1,41 +1,31 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#salesPitch {
+    text-align: center;
+    padding: 20px;
+}
+
 .login {
-    display: grid;
-    column-gap: 14px;
-    row-gap: 14px;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 400px));
+    display: flex;
+    justify-content: center;
+    gap: 80px;
     margin-top: 50px;
-    justify-content: space-around;
+    align-items: center;
 }
 
-input[type="text"] {
-    border: solid 1px var(--primary-color);
-    padding: 10px;
-    border-radius: 8px;
-    margin-right: 4px;
-    display: inline-block;
-    width: 30%;
+.parentlogin,
+.childlogin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-button {
-    padding: 10px;
-    border: solid 1px var(--primary-color);
-    background: var(--primary-color);
-    color: lightblue;
-    border-radius: 8px;
-}
-
-@media (min-width: 500px) and (max-width: 768px) {
-    .results {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    input[type="text"] {
-        width: 70%;
-    }
-}
-
-@media (max-width: 499px) {
-    .results {
-        grid-template-columns: 1fr;
-    }
+.button-group {
+    display: flex;
+    gap: 10px;
 }
