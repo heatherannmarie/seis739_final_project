@@ -1,0 +1,138 @@
+.store-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.store-card {
+    padding: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.store-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.store-card p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+.available {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+}
+
+.out-of-stock {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #ffebee;
+    color: #c62828;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.edit-btn {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.purchase-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.save-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.cancel-btn {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.delete-btn {
+    background: #f44336;
+    color: white;
+}
+
+.add-btn {
+    background: #333;
+    color: white;
+    margin-top: 1rem;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.edit-actions button {
+    margin: 0;
+}
+
+.add-form {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 400px;
+}
+
+.add-form h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}

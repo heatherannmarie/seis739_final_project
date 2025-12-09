@@ -1,13 +1,40 @@
 <div class="chore-grid">
     @for (chore of chores; track chore.choreId) {
     <div class="chore-card">
+        @if (editingChore?.choreId === chore.choreId) {
+        <!-- Edit Mode -->
+        <form (ngSubmit)="saveChoreEdit()">
+            <div class="form-group">
+                <label>Chore Name</label>
+                <input type="text" [(ngModel)]="editChoreName" name="editChoreName" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" [(ngModel)]="editChoreDescription" name="editChoreDescription" required>
+            </div>
+            <div class="form-group">
+                <label>Price ($)</label>
+                <input type="number" [(ngModel)]="editChorePrice" name="editChorePrice" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label>Assigned Child ID</label>
+                <input type="text" [(ngModel)]="editChoreAssignedChild" name="editChoreAssignedChild">
+            </div>
+            <div class="edit-actions">
+                <button type="submit" class="save-btn">Save</button>
+                <button type="button" (click)="cancelChoreEdit()" class="cancel-btn">Cancel</button>
+                <button type="button" (click)="deleteChore(chore.choreId)" class="delete-btn">Delete</button>
+            </div>
+        </form>
+        } @else {
+        <!-- View Mode -->
         <h3>{{ chore.choreName }}</h3>
         <p>{{ chore.choreDescription }}</p>
         <p>Price: ${{ chore.chorePrice }}</p>
         <p>Status: {{ chore.status }}</p>
 
         @if (mode === 'parent') {
-        <button>Edit</button>
+        <button (click)="startChoreEdit(chore)" class="edit-btn">Edit</button>
         @if (chore.status === 'PENDING') {
         <button (click)="approveChore(chore.choreId)">Approve Completion</button>
         <button (click)="denyChore(chore.choreId)">Deny</button>
@@ -19,6 +46,7 @@
         <span class="pending-badge">Awaiting Approval</span>
         } @else {
         <span class="completed-badge">Completed</span>
+        }
         }
         }
     </div>
