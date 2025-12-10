@@ -15,21 +15,40 @@ export class ChildLoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  childId: string = "";
-  errorMessage: string = "";
+  username: string = '';
+  pin: string = '';
+  errorMessage: string = '';
 
   onSubmit() {
-    this.childService.getChild(this.childId).subscribe({
+    if (!this.username.trim()) {
+      this.errorMessage = 'Username is required';
+      return;
+    }
+    if (!this.pin.trim()) {
+      this.errorMessage = 'PIN is required';
+      return;
+    }
+    if (!/^\d{6}$/.test(this.pin)) {
+      this.errorMessage = 'PIN must be exactly 6 digits';
+      return;
+    }
+
+    this.errorMessage = '';
+
+    this.childService.login(this.username, this.pin).subscribe({
       next: (child) => {
-        console.log("Logged in as:", child);
+        console.log('Logged in as:', child);
         this.authService.setChild(child.childId);
-        this.router.navigate(["/child"]);
+        this.router.navigate(['/child']);
       },
       error: (err) => {
-        console.error("Login failed:", err);
-        this.errorMessage = "Child not found";
+        console.error('Login failed:', err);
+        if (err.error?.error) {
+          this.errorMessage = err.error.error;
+        } else {
+          this.errorMessage = 'Invalid username or PIN';
+        }
       }
-    })
+    });
   }
-
 }

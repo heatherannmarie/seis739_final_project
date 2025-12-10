@@ -27,7 +27,7 @@ export interface Chore {
     chorePrice: number;
     assignedChildId: string | null;
     available: boolean;
-    status: ChoreStatus;  // Add this
+    status: ChoreStatus;
 }
 
 // StoreItem model matching StoreItem.java
@@ -49,12 +49,17 @@ export interface Child {
     transactionHistory: Transaction[];
 }
 
+// Child with PIN (returned when parent creates a child)
+export interface ChildWithPin extends Child {
+    pin: string;
+}
+
 // Parent model matching Parent.java
 export interface Parent {
     parentId: string;
     name: string;
-    email?: string;
-    username?: string;
+    email: string;
+    username: string;
     children: Child[];
     chores: Chore[];
     storeInventory: StoreItem[];
@@ -64,6 +69,8 @@ export interface Parent {
 // Request/Response DTOs
 export interface CreateParentRequest {
     name: string;
+    email: string;
+    username: string;
 }
 
 export interface CreateChildRequest {
@@ -91,4 +98,8 @@ export interface PayChildRequest {
 
 export interface BalanceResponse {
     balance: number;
+}
+
+export interface PinResponse {
+    pin: string;
 }

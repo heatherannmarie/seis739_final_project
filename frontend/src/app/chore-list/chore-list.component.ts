@@ -3,7 +3,8 @@ import { ParentService } from '../services';
 import { ChildService } from '../services';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { Chore } from '../../models';
+import { Chore, Child } from '../../models';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-chore-list',
@@ -11,7 +12,7 @@ import { Chore } from '../../models';
   templateUrl: './chore-list.component.html',
   styleUrl: './chore-list.component.css'
 })
-export class ChoreListComponent {
+export class ChoreListComponent implements OnInit {
   private parentService = inject(ParentService);
   private childService = inject(ChildService);
   private authService = inject(AuthService);
@@ -19,11 +20,14 @@ export class ChoreListComponent {
   @Input() chores: Chore[] = [];
   @Input() mode: 'parent' | 'child' = 'child';
 
+
+
   // Add chore form fields
   choreName: string = "";
   choreDescription: string = "";
   chorePrice: number = 1;
   assignedChild: string = "";
+  availableChildren: Child[] = [];
 
   // Edit chore state
   editingChore: Chore | null = null;
@@ -31,6 +35,33 @@ export class ChoreListComponent {
   editChoreDescription: string = "";
   editChorePrice: number = 0;
   editChoreAssignedChild: string = "";
+
+  showAddChoreModal: boolean = false;
+
+  openAddChoreModal() {
+    this.showAddChoreModal = true;
+  }
+
+  closeAddChoreModal() {
+    this.showAddChoreModal = false;
+    this.choreName = "";
+    this.choreDescription = "";
+    this.chorePrice = 1;
+    this.assignedChild = "";
+  }
+
+  ngOnInit() {
+    // Add this if in parent mode
+    if (this.mode === 'parent') {
+      const parentId = this.authService.getParentId();
+      if (parentId) {
+        this.parentService.getChildren(parentId).subscribe({
+          next: (children) => this.availableChildren = children,
+          error: (err) => console.error('Failed to load children:', err)
+        });
+      }
+    }
+  }
 
   // Start editing a chore
   startChoreEdit(chore: Chore) {
@@ -170,10 +201,7 @@ export class ChoreListComponent {
       next: (item) => {
         console.log("Creating chore:", item);
         this.chores.push(item);
-        this.choreName = "";
-        this.choreDescription = "";
-        this.chorePrice = 1;
-        this.assignedChild = "";
+        this.closeAddChoreModal();
       },
       error: (err) => console.error("Failed to create chore:", err)
     });

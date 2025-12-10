@@ -15,8 +15,12 @@ export class AppComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
   logout() {
     this.authService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 }

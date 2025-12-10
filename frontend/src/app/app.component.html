@@ -1,12 +1,17 @@
 <header>
   <h1>
-    <a id="appTitle" routerLink="/home">Safe Spend</a>
+    <a id="app-title" [routerLink]="['/home']">Safe Spend</a>
   </h1>
-  <button id="logout" (click)="logout()">Log Out</button>
+  @if (isLoggedIn) {
+    <button id="special-button" (click)="logout()">Log Out</button>
+  } @else {
+    <button id="header-button" [routerLink]="['/parentlogin']">Log In</button>
+  }
 </header>
 
 <router-outlet></router-outlet>
 
 <footer>
-  <p>Safe Spend links and info</p>
+  <h4 id="footer-text">Safe Spend</h4>
+  <address>123 Sesame St<br />Minneapolis, MN 55418<br />safespend&commat;fakeemail.com<br />651-651-6651</address>
 </footer>

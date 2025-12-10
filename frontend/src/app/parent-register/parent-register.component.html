@@ -1,7 +1,19 @@
-<p>parent-register works!</p>
-
 <form (ngSubmit)="onSubmit()">
-    <label for="name">Name:</label>
-    <input type="text" id="name" [(ngModel)]="parentName" name="name" required>
-    <button type="submit">Register</button>
+    <h2>Create Account</h2>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" [(ngModel)]="parentName" name="name" required placeholder="Your full name">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" [(ngModel)]="parentEmail" name="email" required placeholder="your@email.com">
+
+    <label for="username">Username</label>
+    <input type="text" id="username" [(ngModel)]="parentUsername" name="username" required
+        placeholder="Choose a username">
+
+    @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+    }
+
+    <button type="submit">Create Account</button>
 </form>

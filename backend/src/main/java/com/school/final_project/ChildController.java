@@ -1,6 +1,8 @@
 package com.school.final_project;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -18,15 +20,62 @@ public class ChildController {
     private DataSharing dataStore;
 
     @Autowired
+    private ChildRepository childRepository;
+
+    @Autowired
     private TransactionRepository transactionRepository;
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+        String pin = request.get("pin");
+
+        if (username == null || username.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
+        }
+        if (pin == null || pin.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "PIN is required"));
+        }
+
+        Child child = childRepository.findByUsername(username).orElse(null);
+        if (child == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid username or PIN"));
+        }
+
+        if (!child.validatePin(pin)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid username or PIN"));
+        }
+
+        // Return child data without exposing the PIN
+        Map<String, Object> response = new HashMap<>();
+        response.put("childId", child.getChildId());
+        response.put("name", child.getName());
+        response.put("username", child.getUsername());
+        response.put("balance", child.getBalance());
+        response.put("parentId", child.getParentId());
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{childId}")
-    public Child getChild(@PathVariable String childId) {
+    public ResponseEntity<?> getChild(@PathVariable String childId) {
         Child child = dataStore.getChild(childId);
         if (child == null) {
-            throw new RuntimeException("Child not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Child not found"));
         }
-        return child;
+
+        // Return child data without exposing the PIN
+        Map<String, Object> response = new HashMap<>();
+        response.put("childId", child.getChildId());
+        response.put("name", child.getName());
+        response.put("username", child.getUsername());
+        response.put("balance", child.getBalance());
+        response.put("parentId", child.getParentId());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{childId}/balance")

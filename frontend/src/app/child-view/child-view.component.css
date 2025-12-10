@@ -65,7 +65,6 @@
     padding: 2rem;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border);
-    max-width: 500px;
 }
 
 .account-header {
@@ -78,8 +77,8 @@
 }
 
 .avatar {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     border-radius: var(--radius-full);
     background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
     color: white;

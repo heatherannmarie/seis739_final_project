@@ -76,12 +76,12 @@
     .transaction-table {
         font-size: 0.85rem;
     }
-
+    
     .transaction-table th,
     .transaction-table td {
         padding: 0.65rem 0.5rem;
     }
-
+    
     /* Hide description on very small screens */
     .transaction-table th:nth-child(3),
     .transaction-table td:nth-child(3) {

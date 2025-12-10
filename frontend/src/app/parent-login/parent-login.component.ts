@@ -15,11 +15,18 @@ export class ParentLoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  parentId: string = '';
+  username: string = '';
   errorMessage: string = '';
 
   onSubmit() {
-    this.parentService.getParent(this.parentId).subscribe({
+    if (!this.username.trim()) {
+      this.errorMessage = 'Username is required';
+      return;
+    }
+
+    this.errorMessage = '';
+
+    this.parentService.login(this.username).subscribe({
       next: (parent) => {
         console.log('Logged in as:', parent);
         this.authService.setParent(parent.parentId);
@@ -27,7 +34,11 @@ export class ParentLoginComponent {
       },
       error: (err) => {
         console.error('Login failed:', err);
-        this.errorMessage = 'Parent not found';
+        if (err.error?.error) {
+          this.errorMessage = err.error.error;
+        } else {
+          this.errorMessage = 'Invalid username';
+        }
       }
     });
   }

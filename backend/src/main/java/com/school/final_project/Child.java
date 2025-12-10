@@ -6,6 +6,7 @@ import jakarta.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -20,8 +21,14 @@ public class Child {
     private String childId;
 
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String username;
+
     private double balance;
+
+    @Column(nullable = false)
+    private String pin;
 
     @JsonIgnore
     @ManyToOne
@@ -44,7 +51,14 @@ public class Child {
         this.parentIdString = parent.getParentId();
         this.balance = 0.0;
         this.childId = childID;
+        this.pin = generatePin();
         this.transactionHistory = new ArrayList<>();
+    }
+
+    private String generatePin() {
+        Random random = new Random();
+        int pinNumber = 100000 + random.nextInt(900000);
+        return String.valueOf(pinNumber);
     }
 
     public String getChildId() {
@@ -61,6 +75,10 @@ public class Child {
 
     public double getBalance() {
         return balance;
+    }
+
+    public String getPin() {
+        return pin;
     }
 
     public Parent getParent() {
@@ -87,6 +105,10 @@ public class Child {
         this.balance = balance;
     }
 
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
     public void setParent(Parent parent) {
         this.parent = parent;
     }
@@ -105,6 +127,14 @@ public class Child {
 
     public void subtractBalance(double amount) {
         balance -= amount;
+    }
+
+    public void regeneratePin() {
+        this.pin = generatePin();
+    }
+
+    public boolean validatePin(String inputPin) {
+        return this.pin != null && this.pin.equals(inputPin);
     }
 
     public List<Chore> viewAvailableChores() {

@@ -2,24 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Warm, friendly color palette */
-    --primary: #5b8a72;
-    /* Sage green - trustworthy, calming */
-    --primary-light: #7ba393;
-    --primary-dark: #456b58;
-    --secondary: #f4a259;
-    /* Warm orange - friendly, energetic */
-    --secondary-light: #f7bc85;
-    --accent: #e76f51;
-    /* Coral - highlights, actions */
+    --primary: #47A96C;
+    --primary-light: #96D3AD;
+    --primary-dark: #2E6B45;
+    --secondary: #747EC3;
+    --secondary-light: #D1F0EC;
+    --accent: #211A3D;
 
     /* Neutrals */
-    --bg-cream: #faf8f5;
+    --bg-cream: #E6F4EB;
     --bg-white: #ffffff;
-    --text-dark: #2d3436;
-    --text-medium: #636e72;
-    --text-light: #b2bec3;
-    --border: #e0ddd8;
+    --text-dark: #3A3D3B;
+    --text-medium: #636664;
+    --text-light: #D9DEDB;
+    --border: #C8CADE;
 
     /* Feedback colors */
     --success: #6ab04c;
@@ -42,6 +38,158 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+.btn-edit {
+    background: rgba(91, 138, 114, 0.1);
+    color: var(--primary);
+}
+
+.btn-save {
+    background: var(--success);
+    color: white;
+}
+
+.btn-cancel {
+    background: var(--bg-cream);
+    color: var(--text-medium);
+    border: 1px solid var(--border);
+}
+
+.btn-delete {
+    background: var(--error);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+/* Add to styles.css */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.form-group input {
+    width: 100%;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(45, 52, 54, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-content.modal-large {
+    max-width: 600px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+/* Add to styles.css */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-available {
+    background: rgba(91, 138, 114, 0.15);
+    color: var(--primary);
+}
+
+.status-pending {
+    background: rgba(244, 162, 89, 0.15);
+    color: var(--secondary);
+}
+
+.status-completed {
+    background: rgba(106, 176, 76, 0.15);
+    color: var(--success);
+}
+
+/* Add to styles.css */
+.sidebar {
+    width: 220px;
+    padding: 1.5rem 0;
+    flex-shrink: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar a {
+    display: block;
+    padding: 0.875rem 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.sidebar a.active {
+    background: rgba(91, 138, 114, 0.2);
+    color: white;
+    border-left-color: var(--primary-light);
+}
+
+/* Add to styles.css */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 html,
@@ -101,6 +249,10 @@ a {
 
 a:hover {
     color: var(--primary-dark);
+}
+
+#section-header {
+    align-items: center;
 }
 
 /* Buttons */

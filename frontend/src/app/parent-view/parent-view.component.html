@@ -5,14 +5,46 @@
             <li><a (click)="activeSection = 'chores'" [class.active]="activeSection === 'chores'">Chores</a></li>
             <li><a (click)="activeSection = 'store'" [class.active]="activeSection === 'store'">Store</a></li>
             <li><a (click)="activeSection = 'transactions'"
-                    [class.active]="activeSection === 'transactions'">Transactions</a></li>
+                    [class.active]="activeSection === 'transactions'">Transaction History</a></li>
         </ul>
     </nav>
 
     <main class="content">
         @if (activeSection === 'children') {
-        <h1>Manage Children</h1>
+        <section id="page-title">
+            <h1>Manage Children</h1>
+            <button id="add-child-btn" (click)="openNewChildAccountModal()">+ Create Child Account</button>
 
+
+            @if (showNewChildAccountModal) {
+            <div class="modal-overlay" (click)="closeNewChildAccountModal()">
+                <div class="modal-content" (click)="$event.stopPropagation()">
+                    <div class="add-child-form">
+                        <h3>Add New Child</h3>
+                        <form (ngSubmit)="createChildOnSubmit()">
+                            <div class="form-group">
+                                <label for="newChildName">Name</label>
+                                <input type="text" id="newChildName" [(ngModel)]="newChildName" name="newChildName"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newChildUsername">Username</label>
+                                <input type="text" id="newChildUsername" [(ngModel)]="newChildUsername"
+                                    name="newChildUsername" required>
+                            </div>
+                            <div class="modal-actions">
+                                <button type="submit" class="add-btn">Add Child</button>
+                                <button type="button" (click)="closeNewChildAccountModal()"
+                                    class="cancel-btn">Cancel</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            }
+        </section>
+        
         <div class="child-grid">
             @for (child of children; track child.childId) {
             <div class="child-card">
@@ -36,7 +68,7 @@
                     <div class="child-avatar">{{ child.name.charAt(0).toUpperCase() }}</div>
                     <div class="child-info">
                         <h3>{{ child.name }}</h3>
-                        <p class="username">{{ child.username }}</p>
+                        <p class="username">&#64;{{ child.username }}</p>
                     </div>
                 </div>
 
@@ -49,31 +81,17 @@
 
                 <div class="child-actions">
                     <button (click)="startChildEdit(child)" class="action-btn edit-btn">Edit</button>
+                    <button (click)="viewChildPin(child)" class="action-btn pin-btn">View PIN</button>
                     <button (click)="openAllowanceModal(child)" class="action-btn allowance-btn">Send Allowance</button>
-                    <button (click)="viewChildTransactions(child)" class="action-btn history-btn">View
-                        Transactions</button>
-                    <button (click)="viewChildChores(child)" class="action-btn chores-btn">View Chores</button>
+                    <button (click)="viewChildTransactions(child)" class="action-btn history-btn">Transactions</button>
+                    <button (click)="viewChildChores(child)" class="action-btn chores-btn">Chores</button>
                 </div>
                 }
             </div>
             }
         </div>
 
-        <div class="add-child-form">
-            <h3>Add New Child</h3>
-            <form (ngSubmit)="createChildOnSubmit()">
-                <div class="form-group">
-                    <label for="newChildName">Name</label>
-                    <input type="text" id="newChildName" [(ngModel)]="newChildName" name="newChildName" required>
-                </div>
-                <div class="form-group">
-                    <label for="newChildUsername">Username</label>
-                    <input type="text" id="newChildUsername" [(ngModel)]="newChildUsername" name="newChildUsername"
-                        required>
-                </div>
-                <button type="submit" class="add-btn">Add Child</button>
-            </form>
-        </div>
+
         }
 
         @if (activeSection === 'chores') {
@@ -101,7 +119,7 @@
             <div class="form-group">
                 <label for="allowanceAmount">Amount ($)</label>
                 <input type="number" id="allowanceAmount" [(ngModel)]="allowanceAmount" name="allowanceAmount"
-                    min="0.01" step="0.01" required>
+                    step="0.01" placeholder="Enter Allowance Amount" required />
             </div>
             <div class="modal-actions">
                 <button type="submit" class="send-btn">Send</button>
@@ -186,6 +204,62 @@
 
         <div class="modal-actions">
             <button type="button" (click)="closeChoresModal()" class="close-btn">Close</button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- PIN Modal -->
+@if (showPinModal && selectedChild) {
+<div class="modal-overlay" (click)="closePinModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>{{ selectedChild.name }}'s Login Credentials</h2>
+
+        <div class="credentials-display">
+            <div class="credential-item">
+                <span class="credential-label">Username</span>
+                <span class="credential-value">{{ selectedChild.username }}</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">PIN</span>
+                <span class="credential-value pin-display">{{ currentPin }}</span>
+            </div>
+        </div>
+
+        <p class="credential-note">Share these credentials with your child so they can log in.</p>
+
+        <div class="modal-actions">
+            <button type="button" (click)="regeneratePin()" class="regenerate-btn">Regenerate PIN</button>
+            <button type="button" (click)="closePinModal()" class="close-btn">Close</button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- New Child Created PIN Modal -->
+@if (showNewChildPinModal && newChildCreated) {
+<div class="modal-overlay">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Child Account Created!</h2>
+
+        <p class="success-message">{{ newChildCreated.name }}'s account has been created successfully.</p>
+
+        <div class="credentials-display">
+            <div class="credential-item">
+                <span class="credential-label">Username</span>
+                <span class="credential-value">{{ newChildCreated.username }}</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">PIN</span>
+                <span class="credential-value pin-display">{{ newChildPin }}</span>
+            </div>
+        </div>
+
+        <p class="credential-note warning">Please save these credentials! You can view them later from the child's card,
+            but make sure to share them with your child.</p>
+
+        <div class="modal-actions">
+            <button type="button" (click)="closeNewChildPinModal()" class="close-btn">Got It!</button>
         </div>
     </div>
 </div>

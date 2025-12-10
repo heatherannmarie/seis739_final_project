@@ -11,6 +11,11 @@ export class ChildService {
     private http = inject(HttpClient);
     private baseUrl = `${environment.apiUrl}/children`;
 
+    // Login with username and PIN
+    login(username: string, pin: string): Observable<Child> {
+        return this.http.post<Child>(`${this.baseUrl}/login`, { username, pin });
+    }
+
     // Get child by ID
     getChild(childId: string): Observable<Child> {
         return this.http.get<Child>(`${this.baseUrl}/${childId}`);

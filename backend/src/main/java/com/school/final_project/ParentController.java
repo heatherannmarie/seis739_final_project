@@ -1,6 +1,8 @@
 package com.school.final_project;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.school.final_project.ChoreStatus;
@@ -18,15 +20,63 @@ public class ParentController {
     @Autowired
     private DataSharing dataStore;
 
-    @PostMapping
-    public Parent createParent(@RequestBody Map<String, String> request) {
-        String parentId = "parent_" + System.currentTimeMillis();
-        String name = request.get("name");
+    @Autowired
+    private ParentRepository parentRepository;
 
-        Parent parent = new Parent(parentId, name);
+    @Autowired
+    private ChildRepository childRepository;
+
+    @PostMapping
+    public ResponseEntity<?> createParent(@RequestBody Map<String, String> request) {
+        String name = request.get("name");
+        String email = request.get("email");
+        String username = request.get("username");
+
+        // Validate required fields
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Name is required"));
+        }
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email is required"));
+        }
+        if (username == null || username.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
+        }
+
+        // Check if username already exists
+        if (parentRepository.findByUsername(username).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username already taken"));
+        }
+
+        // Check if email already exists
+        if (parentRepository.findByEmail(email).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already registered"));
+        }
+
+        String parentId = "parent_" + System.currentTimeMillis();
+        Parent parent = new Parent(parentId, name, email, username);
         dataStore.addParent(parent);
 
-        return parent;
+        return ResponseEntity.ok(parent);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+
+        if (username == null || username.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
+        }
+
+        Parent parent = parentRepository.findByUsername(username).orElse(null);
+        if (parent == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid username"));
+        }
+
+        // For now, just return the parent (password validation will be added later with
+        // OAuth)
+        return ResponseEntity.ok(parent);
     }
 
     @GetMapping("/{parentId}")
@@ -39,23 +89,45 @@ public class ParentController {
     }
 
     @PostMapping("/{parentId}/children")
-    public Child createChild(
+    public ResponseEntity<?> createChild(
             @PathVariable String parentId,
             @RequestBody Map<String, String> request) {
 
         Parent parent = dataStore.getParent(parentId);
         if (parent == null) {
-            throw new RuntimeException("Parent not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Parent not found"));
         }
 
-        String childId = "child_" + System.currentTimeMillis();
         String childName = request.get("name");
         String username = request.get("username");
 
+        if (childName == null || childName.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Name is required"));
+        }
+        if (username == null || username.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
+        }
+
+        // Check if username already exists
+        if (childRepository.findByUsername(username).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username already taken"));
+        }
+
+        String childId = "child_" + System.currentTimeMillis();
         Child child = parent.createChildAccount(childName, username, childId);
         dataStore.addParent(parent);
 
-        return child;
+        // Return child data INCLUDING the PIN so parent can share it
+        Map<String, Object> response = new HashMap<>();
+        response.put("childId", child.getChildId());
+        response.put("name", child.getName());
+        response.put("username", child.getUsername());
+        response.put("balance", child.getBalance());
+        response.put("parentId", child.getParentId());
+        response.put("pin", child.getPin());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{parentId}/children")
@@ -65,6 +137,59 @@ public class ParentController {
             throw new RuntimeException("Parent not found");
         }
         return parent.getChildren();
+    }
+
+    @GetMapping("/{parentId}/children/{childId}/pin")
+    public ResponseEntity<?> getChildPin(
+            @PathVariable String parentId,
+            @PathVariable String childId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Parent not found"));
+        }
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Child not found"));
+        }
+
+        if (!child.getParentId().equals(parentId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Child does not belong to this parent"));
+        }
+
+        return ResponseEntity.ok(Map.of("pin", child.getPin()));
+    }
+
+    @PostMapping("/{parentId}/children/{childId}/regenerate-pin")
+    public ResponseEntity<?> regenerateChildPin(
+            @PathVariable String parentId,
+            @PathVariable String childId) {
+
+        Parent parent = dataStore.getParent(parentId);
+        if (parent == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Parent not found"));
+        }
+
+        Child child = dataStore.getChild(childId);
+        if (child == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Child not found"));
+        }
+
+        if (!child.getParentId().equals(parentId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Child does not belong to this parent"));
+        }
+
+        child.regeneratePin();
+        dataStore.addChild(child);
+
+        return ResponseEntity.ok(Map.of("pin", child.getPin()));
     }
 
     @PutMapping("/{parentId}/children/{childId}")

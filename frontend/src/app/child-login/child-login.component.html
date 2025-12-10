@@ -1,14 +1,16 @@
-<p>child-login works!</p>
-
 <form (ngSubmit)="onSubmit()">
     <h2>Child Login</h2>
 
-    <label for="childId">Child ID</label>
-    <input type="text" id="childId" [(ngModel)]="childId" name="childId" required>
+    <label for="username">Username</label>
+    <input type="text" id="username" [(ngModel)]="username" name="username" required placeholder="Enter your username">
+
+    <label for="pin">PIN</label>
+    <input type="text" id="pin" [(ngModel)]="pin" name="pin" required maxlength="6" pattern="[0-9]{6}"
+        placeholder="Enter your 6-digit PIN" inputmode="numeric">
 
     @if (errorMessage) {
     <p class="error">{{ errorMessage }}</p>
     }
 
-    <button type="submit">Log In</button>
+    <button type="standard-button">Log In</button>
 </form>

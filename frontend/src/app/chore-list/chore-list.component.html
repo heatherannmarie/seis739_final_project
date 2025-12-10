@@ -1,3 +1,54 @@
+<section id="page-title">
+
+    <h2 id="section-header">Chores</h2>
+
+    @if (mode === 'parent') {
+    <button class="add-chore-btn" (click)="openAddChoreModal()">+ Add New Chore</button>
+
+    <!-- Add Chore Modal -->
+    @if (showAddChoreModal) {
+    <div class="modal-overlay" (click)="closeAddChoreModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <h2>Add New Chore</h2>
+            <form id="add-chore" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="choreName">Chore Name</label>
+                    <input type="text" id="choreName" [(ngModel)]="choreName" name="choreName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="chorePrice">Chore Price ($)</label>
+                    <input type="number" id="chorePrice" [(ngModel)]="chorePrice" name="chorePrice" min="0" step="0.01"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="choreDescription">Description</label>
+                    <textarea id="choreDescription" [(ngModel)]="choreDescription" name="choreDescription" rows="3"
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignedChild">Assigned Child (Optional)</label>
+                    <select id="assignedChild" [(ngModel)]="assignedChild" name="assignedChild">
+                        <option value="">-- None --</option>
+                        @for (child of availableChildren; track child.childId) {
+                        <option [value]="child.childId">{{ child.name }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="save-btn">Add Chore</button>
+                    <button type="button" (click)="closeAddChoreModal()" class="cancel-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+    }
+</section>
+
 <div class="chore-grid">
     @for (chore of chores; track chore.choreId) {
     <div class="chore-card">
@@ -50,25 +101,10 @@
         }
         }
     </div>
-    }
-
-    @if (mode === 'parent') {
-    <form (ngSubmit)="onSubmit()">
-        <h2>Add Chore</h2>
-
-        <label for="chore">Chore Name</label>
-        <input type="text" id="choreName" [(ngModel)]="choreName" name="choreName" required>
-
-        <label for="chorePrice">Chore Price</label>
-        <input type="number" id="chorePrice" [(ngModel)]="chorePrice" name="chorePrice" required>
-
-        <label for="choreDescription">Description</label>
-        <input type="text" id="choreDescription" [(ngModel)]="choreDescription" name="choreDescription" required>
-
-        <label for="assignedChild">Assigned Child</label>
-        <input type="text" id="assignedChild" [(ngModel)]="assignedChild" name="assignedChild" required>
-
-        <button type="submit">Add Chore</button>
-    </form>
+    } @empty {
+    <div class="no-chores-message">
+        <p>{{ mode === 'parent' ? 'No chores created yet. Add a chore to get started!' :
+            'No chores available right now. Check back later!' }}</p>
+    </div>
     }
 </div>

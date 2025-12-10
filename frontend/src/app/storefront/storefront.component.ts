@@ -4,6 +4,7 @@ import { ParentService } from '../services';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { StoreItem } from '../../models';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-storefront',
@@ -29,20 +30,33 @@ export class StorefrontComponent implements OnInit {
   editItemPrice: number = 0;
   editItemQuantity: number = 0;
 
-  isParent: boolean = false;
+  @Input() mode: 'parent' | 'child' = 'child';
+
+  showAddItemModal: boolean = false;
+
+  openAddItemModal() {
+    this.showAddItemModal = true;
+  }
+
+  closeAddItemModal() {
+    this.showAddItemModal = false;
+    this.itemName = '';
+    this.itemPrice = 0;
+    this.itemQuantity = 1;
+  }
 
   ngOnInit() {
     const parentId = this.authService.getParentId();
     const childId = this.authService.getChildId();
 
     if (parentId) {
-      this.isParent = true;
+      this.mode = "parent";
       this.parentService.getStoreItems(parentId).subscribe({
         next: (data) => this.inventory = data,
         error: (err) => console.error("Failed to load inventory:", err)
       });
     } else if (childId) {
-      this.isParent = false;
+      this.mode = "child";
       this.childService.getStoreItems(childId).subscribe({
         next: (data) => this.inventory = data,
         error: (err) => console.error("Failed to load inventory:", err)
@@ -119,9 +133,7 @@ export class StorefrontComponent implements OnInit {
       next: (item) => {
         console.log('Created item:', item);
         this.inventory.push(item);
-        this.itemName = '';
-        this.itemPrice = 0;
-        this.itemQuantity = 1;
+        this.closeAddItemModal();
       },
       error: (err) => console.error('Failed to create item:', err)
     });

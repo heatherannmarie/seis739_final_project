@@ -47,8 +47,3 @@ form button[type="submit"] {
 form button[type="submit"]:hover {
     box-shadow: var(--shadow-md);
 }
-
-/* Hide the default "works!" text */
-p:first-child {
-    display: none;
-}

@@ -17,8 +17,13 @@ public class Parent {
     private String parentId;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
+
+    @Column(unique = true, nullable = false)
     private String username;
+
     private String passwordHash;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -39,9 +44,11 @@ public class Parent {
     public Parent() {
     }
 
-    public Parent(String parentId, String name) {
+    public Parent(String parentId, String name, String email, String username) {
         this.parentId = parentId;
         this.name = name;
+        this.email = email;
+        this.username = username;
         this.children = new ArrayList<>();
         this.chores = new ArrayList<>();
         this.storeInventory = new ArrayList<>();

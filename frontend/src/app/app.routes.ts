@@ -10,7 +10,7 @@ import { ParentRegisterComponent } from './parent-register/parent-register.compo
 import { ChildLoginComponent } from './child-login/child-login.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: 'home', component: HomeComponent },
     { path: 'parent', component: ParentViewComponent },
     { path: 'child', component: ChildViewComponent },
     { path: 'chores', component: ChoreListComponent },

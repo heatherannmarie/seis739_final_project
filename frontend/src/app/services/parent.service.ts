@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {
     Parent,
     Child,
+    ChildWithPin,
     Chore,
     StoreItem,
     Transaction,
@@ -11,7 +12,8 @@ import {
     CreateChildRequest,
     CreateChoreRequest,
     CreateStoreItemRequest,
-    PayChildRequest
+    PayChildRequest,
+    PinResponse
 } from '../../models';
 import { environment } from '../../environments/environment';
 
@@ -27,19 +29,34 @@ export class ParentService {
         return this.http.post<Parent>(this.baseUrl, request);
     }
 
+    // Login with username
+    login(username: string): Observable<Parent> {
+        return this.http.post<Parent>(`${this.baseUrl}/login`, { username });
+    }
+
     // Get parent by ID
     getParent(parentId: string): Observable<Parent> {
         return this.http.get<Parent>(`${this.baseUrl}/${parentId}`);
     }
 
-    // Create a child account under a parent
-    createChild(parentId: string, request: CreateChildRequest): Observable<Child> {
-        return this.http.post<Child>(`${this.baseUrl}/${parentId}/children`, request);
+    // Create a child account under a parent (returns child with PIN)
+    createChild(parentId: string, request: CreateChildRequest): Observable<ChildWithPin> {
+        return this.http.post<ChildWithPin>(`${this.baseUrl}/${parentId}/children`, request);
     }
 
     // Get all children for a parent
     getChildren(parentId: string): Observable<Child[]> {
         return this.http.get<Child[]>(`${this.baseUrl}/${parentId}/children`);
+    }
+
+    // Get a child's PIN
+    getChildPin(parentId: string, childId: string): Observable<PinResponse> {
+        return this.http.get<PinResponse>(`${this.baseUrl}/${parentId}/children/${childId}/pin`);
+    }
+
+    // Regenerate a child's PIN
+    regenerateChildPin(parentId: string, childId: string): Observable<PinResponse> {
+        return this.http.post<PinResponse>(`${this.baseUrl}/${parentId}/children/${childId}/regenerate-pin`, {});
     }
 
     // Update a child account

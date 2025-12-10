@@ -1,5 +1,3 @@
-/* Child Login Form */
-
 :host {
     display: flex;
     justify-content: center;
@@ -61,7 +59,3 @@ form button[type="submit"]:hover {
     font-weight: 500;
 }
 
-/* Hide the default "works!" text */
-p:first-child {
-    display: none;
-}

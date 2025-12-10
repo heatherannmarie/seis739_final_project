@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { StorefrontComponent } from '../storefront/storefront.component';
 import { TransactionsComponent } from '../transactions/transactions.component';
-import { Child, Chore, Transaction } from '../../models';
+import { Child, ChildWithPin, Chore, Transaction } from '../../models';
 import { ChildService } from '../services';
 
 @Component({
@@ -38,10 +38,16 @@ export class ParentViewComponent implements OnInit {
   showAllowanceModal: boolean = false;
   showTransactionsModal: boolean = false;
   showChoresModal: boolean = false;
+  showPinModal: boolean = false;
+  showNewChildPinModal: boolean = false;
+  showNewChildAccountModal: boolean = false;
   selectedChild: Child | null = null;
   allowanceAmount: number = 0;
   childTransactions: Transaction[] = [];
   childChores: Chore[] = [];
+  currentPin: string = '';
+  newChildPin: string = '';
+  newChildCreated: ChildWithPin | null = null;
 
   ngOnInit() {
     const parentId = this.authService.getParentId();
@@ -77,26 +83,12 @@ export class ParentViewComponent implements OnInit {
     });
   }
 
-  createChildOnSubmit() {
-    const parentId = this.authService.getParentId();
 
-    if (!parentId) {
-      console.error('No parent logged in');
-      return;
-    }
 
-    this.parentService.createChild(parentId, {
-      name: this.newChildName,
-      username: this.newChildUsername
-    }).subscribe({
-      next: (child) => {
-        console.log('Created child:', child);
-        this.children.push(child);
-        this.newChildName = '';
-        this.newChildUsername = '';
-      },
-      error: (err) => console.error('Failed to create child:', err)
-    });
+  closeNewChildPinModal() {
+    this.showNewChildPinModal = false;
+    this.newChildCreated = null;
+    this.newChildPin = '';
   }
 
   startChildEdit(child: Child) {
@@ -264,6 +256,77 @@ export class ParentViewComponent implements OnInit {
         this.childChores = this.childChores.filter(c => c.choreId !== choreId);
       },
       error: (err) => console.error('Failed to deny chore:', err)
+    });
+  }
+
+  // PIN Modal Methods
+  viewChildPin(child: Child) {
+    const parentId = this.authService.getParentId();
+    if (!parentId) return;
+
+    this.selectedChild = child;
+    this.parentService.getChildPin(parentId, child.childId).subscribe({
+      next: (response) => {
+        this.currentPin = response.pin;
+        this.showPinModal = true;
+      },
+      error: (err) => console.error('Failed to get PIN:', err)
+    });
+  }
+
+  regeneratePin() {
+    const parentId = this.authService.getParentId();
+    if (!parentId || !this.selectedChild) return;
+
+    if (confirm('Are you sure you want to regenerate the PIN? The old PIN will no longer work.')) {
+      this.parentService.regenerateChildPin(parentId, this.selectedChild.childId).subscribe({
+        next: (response) => {
+          this.currentPin = response.pin;
+        },
+        error: (err) => console.error('Failed to regenerate PIN:', err)
+      });
+    }
+  }
+
+  closePinModal() {
+    this.showPinModal = false;
+    this.selectedChild = null;
+    this.currentPin = '';
+  }
+
+  openNewChildAccountModal() {
+    this.showNewChildAccountModal = true;
+  }
+
+  closeNewChildAccountModal() {
+    this.showNewChildAccountModal = false;
+    this.newChildName = "";
+    this.newChildUsername = "";
+  }
+
+  createChildOnSubmit() {
+    const parentId = this.authService.getParentId();
+
+    if (!parentId) {
+      console.error('No parent logged in');
+      return;
+    }
+
+    this.parentService.createChild(parentId, {
+      name: this.newChildName,
+      username: this.newChildUsername
+    }).subscribe({
+      next: (child) => {
+        console.log('Created child:', child);
+        this.children.push(child);
+        this.closeNewChildAccountModal();
+
+        // Show the PIN modal with the new child's credentials
+        this.newChildCreated = child;
+        this.newChildPin = child.pin;
+        this.showNewChildPinModal = true;
+      },
+      error: (err) => console.error('Failed to create child:', err)
     });
   }
 }

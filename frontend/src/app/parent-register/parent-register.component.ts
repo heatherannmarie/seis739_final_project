@@ -16,15 +16,45 @@ export class ParentRegisterComponent {
   private router = inject(Router);
 
   parentName: string = '';
+  parentEmail: string = '';
+  parentUsername: string = '';
+  errorMessage: string = '';
 
   onSubmit() {
-    this.parentService.createParent({ name: this.parentName }).subscribe({
+    // Basic validation
+    if (!this.parentName.trim()) {
+      this.errorMessage = 'Name is required';
+      return;
+    }
+    if (!this.parentEmail.trim()) {
+      this.errorMessage = 'Email is required';
+      return;
+    }
+    if (!this.parentUsername.trim()) {
+      this.errorMessage = 'Username is required';
+      return;
+    }
+
+    this.errorMessage = '';
+
+    this.parentService.createParent({
+      name: this.parentName,
+      email: this.parentEmail,
+      username: this.parentUsername
+    }).subscribe({
       next: (parent) => {
         console.log('Created parent:', parent);
         this.authService.setParent(parent.parentId);
         this.router.navigate(['/parent']);
       },
-      error: (err) => console.error('Failed to create parent:', err)
+      error: (err) => {
+        console.error('Failed to create parent:', err);
+        if (err.error?.error) {
+          this.errorMessage = err.error.error;
+        } else {
+          this.errorMessage = 'Failed to create account. Please try again.';
+        }
+      }
     });
   }
 }

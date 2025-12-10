@@ -33,18 +33,28 @@
     color: #333;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
     box-sizing: border-box;
+    font-family: inherit;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
     outline: none;
     border-color: #667eea;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
 }
 
 /* Button styling */
@@ -113,30 +123,98 @@ button:hover {
     font-size: 0.85rem;
 }
 
-/* Add chore form */
-form h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+/* No chores message */
+.no-chores-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--bg-white);
+    border-radius: var(--radius-md);
+    border: 2px dashed var(--border);
 }
 
-form label {
-    display: block;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
-    font-weight: 500;
+.no-chores-message p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    font-style: italic;
+    margin: 0;
 }
 
-form input {
+/* Add Chore Button */
+.add-chore-btn {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    margin-top: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-chore-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(45, 52, 54, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
     width: 100%;
-    max-width: 300px;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.modal-actions button {
+    flex: 1;
+    margin: 0;
+    padding: 0.75rem;
     font-size: 1rem;
 }
 
-form button[type="submit"] {
-    margin-top: 1rem;
-    background: #333;
-    color: white;
+.modal-actions .save-btn {
+    background: linear-gradient(135deg, var(--success) 0%, #5a9a40 100%);
+}
+
+.modal-actions .cancel-btn {
+    background: var(--bg-cream);
+    color: var(--text-medium);
+    border: 1px solid var(--border);
+}
+
+.modal-actions .cancel-btn:hover {
+    background: var(--border);
 }

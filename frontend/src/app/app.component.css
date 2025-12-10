@@ -49,13 +49,14 @@ footer {
     margin-top: auto;
     text-align: center;
     padding: 1.5rem 2rem;
-    background-color: var(--text-dark);
+    background-color: var(--primary-dark);
     color: var(--text-light);
 }
 
-footer p {
+footer h4 {
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
 }
 
 /* Responsive */

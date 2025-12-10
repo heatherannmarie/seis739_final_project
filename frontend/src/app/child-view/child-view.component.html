@@ -4,7 +4,8 @@
             <li><a (click)="activeSection = 'account'" [class.active]="activeSection === 'account'">My Account</a></li>
             <li><a (click)="activeSection = 'chores'" [class.active]="activeSection === 'chores'">Chores</a></li>
             <li><a (click)="activeSection = 'store'" [class.active]="activeSection === 'store'">Store</a></li>
-            <li><a (click)="activeSection = 'history'" [class.active]="activeSection === 'history'">History</a></li>
+            <li><a (click)="activeSection = 'history'" [class.active]="activeSection === 'history'">Transaction
+                    History</a></li>
         </ul>
     </nav>
 
@@ -47,7 +48,7 @@
             <p>Loading account information...</p>
             }
         </div>
-    }
+        }
 
 
         @if (activeSection === 'chores') {

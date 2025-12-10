@@ -1,8 +1,8 @@
 <form (ngSubmit)="onSubmit()">
     <h2>Parent Login</h2>
 
-    <label for="parentId">Parent ID</label>
-    <input type="text" id="parentId" [(ngModel)]="parentId" name="parentId" required>
+    <label for="username">Username</label>
+    <input type="text" id="username" [(ngModel)]="username" name="username" required placeholder="Enter your username">
 
     @if (errorMessage) {
     <p class="error">{{ errorMessage }}</p>
