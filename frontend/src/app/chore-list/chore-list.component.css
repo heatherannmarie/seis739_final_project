@@ -1,6 +1,6 @@
 .chore-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1rem;
 }
 
@@ -8,4 +8,135 @@
     padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
+    background: white;
+}
+
+.chore-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.chore-card p {
+    margin: 0.25rem 0;
+    color: #666;
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Button styling */
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.edit-btn {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.save-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.cancel-btn {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.delete-btn {
+    background: #f44336;
+    color: white;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.edit-actions button {
+    margin: 0;
+}
+
+/* Status badges */
+.pending-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #fff3e0;
+    color: #f57c00;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.completed-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+/* Add chore form */
+form h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+form label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+form input {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form button[type="submit"] {
+    margin-top: 1rem;
+    background: #333;
+    color: white;
 }

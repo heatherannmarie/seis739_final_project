@@ -1,20 +1,31 @@
+/* Home Component */
+
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 3rem 1.5rem;
+    flex: 1;
 }
 
 #salesPitch {
     text-align: center;
-    padding: 20px;
+    max-width: 600px;
+    margin-bottom: 1rem;
+}
+
+#salesPitch h1 {
+    font-size: 2rem;
+    color: var(--text-dark);
+    line-height: 1.4;
 }
 
 .login {
     display: flex;
     justify-content: center;
-    gap: 80px;
-    margin-top: 50px;
-    align-items: center;
+    gap: 3rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
 }
 
 .parentlogin,
@@ -22,10 +33,68 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 1rem;
+    background: var(--bg-white);
+    padding: 2rem 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    min-width: 280px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.parentlogin:hover,
+.childlogin:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.parentlogin h3,
+.childlogin h3 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.parentlogin p,
+.childlogin p {
+    font-size: 0.95rem;
+    max-width: 220px;
 }
 
 .button-group {
     display: flex;
-    gap: 10px;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.parentlogin button,
+.childlogin button {
+    min-width: 100px;
+}
+
+/* Secondary button style for Sign Up */
+#parentRegister {
+    background-color: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+#parentRegister:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+    .login {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    #salesPitch h1 {
+        font-size: 1.5rem;
+    }
 }
