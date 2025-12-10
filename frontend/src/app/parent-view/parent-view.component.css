@@ -58,7 +58,16 @@
     color: var(--text-dark);
 }
 
+#page-title {
+    padding: 1rem;
+}
+
 /* Child Cards Grid */
+
+#add-child-btn {
+    padding: 1rem;
+}
+
 .child-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

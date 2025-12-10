@@ -1,4 +1,7 @@
 /* Transactions Component */
+#page-title {
+    padding: 1rem;
+}
 
 .transaction-history {
     background: var(--bg-white);

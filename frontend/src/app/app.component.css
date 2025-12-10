@@ -14,7 +14,7 @@ header h1 {
     margin: 0;
 }
 
-#appTitle {
+#app-title {
     font-family: 'Nunito', sans-serif;
     font-size: 2.25rem;
     font-weight: 800;
@@ -29,7 +29,7 @@ header h1 {
     color: white;
 }
 
-#logout {
+#special-button, #header-button {
     position: absolute;
     right: 2rem;
     background-color: rgba(255, 255, 255, 0.15);
@@ -39,7 +39,7 @@ header h1 {
     font-size: 0.9rem;
 }
 
-#logout:hover {
+#special-button:hover, #header-button:hover {
     background-color: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.5);
     transform: none;
