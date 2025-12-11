@@ -59,7 +59,7 @@ public class StoreItem {
         this.itemName = itemName;
     }
 
-    public void setItemPrice(float itemPrice) {
+    public void setItemPrice(double itemPrice) {
         this.itemPrice = itemPrice;
     }
 
