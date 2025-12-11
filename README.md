@@ -25,3 +25,13 @@ Go to localhost:4200/home and view the application!
 A secure authentication system still needs to be added.\
 The transaction tables could be improved in a couple ways - they could include the names of the parent and child accounts, and they could display relative to the current user rather than always showing debits and credits from the pov of the child account.\
 CSS files in the Angular frontend could be cleaned up and consolidated.\
+
+## System Diagrams
+
+### C4 System Context Diagram
+![C4 System Context Diagram](https://imgur.com/6nXTK32)\\
+### C4 Container Diagram
+![C4 System Container Diagram](https://imgur.com/muYGkOb)\\
+
+### C4 Component/Code Diagram Hybrid of Spring Boot App
+![C4 Component/Code Diagram Hybrid of Spring Boot App](https://imgur.com/etNmznA)\\
