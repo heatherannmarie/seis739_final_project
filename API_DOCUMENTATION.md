@@ -926,16 +926,6 @@ Content-Type: application/json
 
 ---
 
-## Notes
-
-1. All monetary values are represented as floating-point numbers (e.g., `25.50`)
-2. All timestamps follow ISO 8601 format (e.g., `2024-12-11T14:30:00`)
-3. IDs are generated server-side using timestamps (e.g., `parent_1234567890`)
-4. PINs are 6-digit numeric strings (e.g., `"123456"`)
-5. Empty request bodies are represented as `{}` or omitted entirely
-
----
-
 ## Testing the API
 
 API calls were tested using Postman
