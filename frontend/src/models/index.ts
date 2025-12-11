@@ -11,7 +11,7 @@ export interface Transaction {
     amount: number;
     childId: string;
     description: string;
-    timestamp: string; // ISO date string
+    timestamp: string;
 }
 
 export enum ChoreStatus {

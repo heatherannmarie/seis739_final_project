@@ -5,7 +5,6 @@
     @if (mode === 'parent') {
     <button class="add-chore-btn" (click)="openAddChoreModal()">+ Add New Chore</button>
 
-    <!-- Add Chore Modal -->
     @if (showAddChoreModal) {
     <div class="modal-overlay" (click)="closeAddChoreModal()">
         <div class="modal-content" (click)="$event.stopPropagation()">
@@ -53,7 +52,7 @@
     @for (chore of chores; track chore.choreId) {
     <div class="chore-card">
         @if (editingChore?.choreId === chore.choreId) {
-        <!-- Edit Mode -->
+
         <form (ngSubmit)="saveChoreEdit()">
             <div class="form-group">
                 <label>Chore Name</label>
@@ -78,7 +77,7 @@
             </div>
         </form>
         } @else {
-        <!-- View Mode -->
+
         <h3>{{ chore.choreName }}</h3>
         <p>{{ chore.choreDescription }}</p>
         <p>Price: ${{ chore.chorePrice }}</p>

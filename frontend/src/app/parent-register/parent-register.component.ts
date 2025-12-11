@@ -21,7 +21,6 @@ export class ParentRegisterComponent {
   errorMessage: string = '';
 
   onSubmit() {
-    // Basic validation
     if (!this.parentName.trim()) {
       this.errorMessage = 'Name is required';
       return;

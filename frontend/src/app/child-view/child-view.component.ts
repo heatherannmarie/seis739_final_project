@@ -26,7 +26,6 @@ export class ChildViewComponent implements OnInit {
   set activeComponent(value: 'account' | 'chores' | 'store' | 'history') {
     if (this._activeComponent !== value) {
       this._activeComponent = value;
-      // Refresh data when section changes
       const childId = this.authService.getChildId();
       if (childId) {
         this.refreshComponentData(childId);

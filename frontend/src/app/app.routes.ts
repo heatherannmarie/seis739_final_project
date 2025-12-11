@@ -11,6 +11,7 @@ import { ChildLoginComponent } from './child-login/child-login.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'parent', component: ParentViewComponent },
     { path: 'child', component: ChildViewComponent },
     { path: 'chores', component: ChoreListComponent },

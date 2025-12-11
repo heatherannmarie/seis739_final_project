@@ -22,7 +22,7 @@ export class ParentViewComponent implements OnInit {
 
   private _activeComponent: 'children' | 'chores' | 'store' | 'transactions' = 'children';
 
-  get activeComponent(){
+  get activeComponent() {
     return this._activeComponent;
   }
 
@@ -39,16 +39,13 @@ export class ParentViewComponent implements OnInit {
   chores: Chore[] = [];
   transactions: Transaction[] = [];
 
-  // New child form
   newChildName: string = '';
   newChildUsername: string = '';
 
-  // Edit child state
   editingChild: Child | null = null;
   editChildName: string = '';
   editChildUsername: string = '';
 
-  // Modal state
   showAllowanceModal: boolean = false;
   showTransactionsModal: boolean = false;
   showChoresModal: boolean = false;
@@ -99,7 +96,7 @@ export class ParentViewComponent implements OnInit {
 
 
   refreshComponentData(parentId: string) {
-    switch(this.activeComponent) {
+    switch (this.activeComponent) {
       case 'children':
         this.loadChildren(parentId);
         break;
@@ -149,7 +146,6 @@ export class ParentViewComponent implements OnInit {
     });
   }
 
-  // Allowance Modal Methods
   openAllowanceModal(child: Child) {
     this.selectedChild = child;
     this.allowanceAmount = 0;
@@ -173,7 +169,6 @@ export class ParentViewComponent implements OnInit {
           this.children[index] = updatedChild;
         }
         this.closeAllowanceModal();
-        // Reload transactions
         this.loadChildren(parentId);
         this.loadTransactions(parentId);
       },
@@ -181,7 +176,6 @@ export class ParentViewComponent implements OnInit {
     });
   }
 
-  // Transactions Modal Methods
   viewChildTransactions(child: Child) {
     this.selectedChild = child;
     this.childService.getChild(child.childId).subscribe({
@@ -219,7 +213,6 @@ export class ParentViewComponent implements OnInit {
     });
   }
 
-  // Chores Modal Methods
   viewChildChores(child: Child) {
     const parentId = this.authService.getParentId();
     if (!parentId) return;
@@ -249,11 +242,7 @@ export class ParentViewComponent implements OnInit {
     this.parentService.approveChore(parentId, choreId).subscribe({
       next: (transaction) => {
         console.log('Chore approved:', transaction);
-
-        // Refresh chores
         this.loadChores(parentId);
-
-        // Refresh child data to update balance
         if (this.selectedChild) {
           this.childService.getChild(this.selectedChild.childId).subscribe({
             next: (updatedChild) => {
@@ -262,14 +251,10 @@ export class ParentViewComponent implements OnInit {
                 this.children[index] = updatedChild;
               }
               this.selectedChild = updatedChild;
-
-              // Update childChores list
               this.childChores = this.chores.filter(c => c.assignedChildId === updatedChild.childId);
             }
           });
         }
-
-        // Refresh transactions
         this.loadTransactions(parentId);
       },
       error: (err) => console.error('Failed to approve chore:', err)
@@ -283,18 +268,13 @@ export class ParentViewComponent implements OnInit {
     this.parentService.denyChore(parentId, choreId).subscribe({
       next: (updatedChore) => {
         console.log('Chore denied:', updatedChore);
-
-        // Refresh chores from server
         this.loadChores(parentId);
-
-        // Update childChores list (remove denied chore)
         this.childChores = this.childChores.filter(c => c.choreId !== choreId);
       },
       error: (err) => console.error('Failed to deny chore:', err)
     });
   }
 
-  // PIN Modal Methods
   viewChildPin(child: Child) {
     const parentId = this.authService.getParentId();
     if (!parentId) return;
@@ -354,11 +334,7 @@ export class ParentViewComponent implements OnInit {
       next: (child) => {
         console.log('Created child:', child);
         this.closeNewChildAccountModal();
-
-        // Refresh children list
         this.loadChildren(parentId);
-
-        // Show the PIN modal with the new child's credentials
         this.newChildCreated = child;
         this.newChildPin = child.pin;
         this.showNewChildPinModal = true;

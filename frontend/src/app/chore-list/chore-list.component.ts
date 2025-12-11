@@ -20,16 +20,12 @@ export class ChoreListComponent implements OnInit {
   @Input() chores: Chore[] = [];
   @Input() mode: 'parent' | 'child' = 'child';
 
-
-
-  // Add chore form fields
   choreName: string = "";
   choreDescription: string = "";
   chorePrice: number = 1;
   assignedChild: string = "";
   availableChildren: Child[] = [];
 
-  // Edit chore state
   editingChore: Chore | null = null;
   editChoreName: string = "";
   editChoreDescription: string = "";
@@ -51,7 +47,6 @@ export class ChoreListComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Add this if in parent mode
     if (this.mode === 'parent') {
       const parentId = this.authService.getParentId();
       if (parentId) {
@@ -63,7 +58,6 @@ export class ChoreListComponent implements OnInit {
     }
   }
 
-  // Start editing a chore
   startChoreEdit(chore: Chore) {
     this.editingChore = chore;
     this.editChoreName = chore.choreName;
@@ -72,7 +66,6 @@ export class ChoreListComponent implements OnInit {
     this.editChoreAssignedChild = chore.assignedChildId || "";
   }
 
-  // Cancel editing
   cancelChoreEdit() {
     this.editingChore = null;
     this.editChoreName = "";
@@ -81,7 +74,6 @@ export class ChoreListComponent implements OnInit {
     this.editChoreAssignedChild = "";
   }
 
-  // Save chore edits
   saveChoreEdit() {
     const parentId = this.authService.getParentId();
     if (!parentId || !this.editingChore) return;
@@ -93,7 +85,6 @@ export class ChoreListComponent implements OnInit {
       assignedChildId: this.editChoreAssignedChild || undefined
     }).subscribe({
       next: (updatedChore) => {
-        // Refresh chores from server
         this.parentService.getChores(parentId).subscribe({
           next: (chores) => {
             this.chores = chores;
@@ -105,7 +96,6 @@ export class ChoreListComponent implements OnInit {
     });
   }
 
-  // Delete a chore
   deleteChore(choreId: string) {
     const parentId = this.authService.getParentId();
     if (!parentId) return;
@@ -113,7 +103,6 @@ export class ChoreListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this chore?')) {
       this.parentService.deleteChore(parentId, choreId).subscribe({
         next: () => {
-          // Refresh chores from server
           this.parentService.getChores(parentId).subscribe({
             next: (chores) => {
               this.chores = chores;
@@ -137,7 +126,6 @@ export class ChoreListComponent implements OnInit {
     this.childService.requestChoreCompletion(childId, choreId).subscribe({
       next: (updatedChore) => {
         console.log('Requested completion:', updatedChore);
-        // Update the local chore status
         const chore = this.chores.find(c => c.choreId === choreId);
         if (chore) {
           chore.status = updatedChore.status;
@@ -159,8 +147,6 @@ export class ChoreListComponent implements OnInit {
     this.parentService.approveChore(parentId, choreId).subscribe({
       next: (transaction) => {
         console.log('Chore approved, transaction:', transaction);
-
-        // Refresh chores from server
         this.parentService.getChores(parentId).subscribe({
           next: (chores) => {
             this.chores = chores;
@@ -182,7 +168,6 @@ export class ChoreListComponent implements OnInit {
     this.parentService.denyChore(parentId, choreId).subscribe({
       next: (updatedChore) => {
         console.log('Chore denied:', updatedChore);
-        // Update the local chore status
         const chore = this.chores.find(c => c.choreId === choreId);
         if (chore) {
           chore.status = updatedChore.status;
@@ -209,8 +194,7 @@ export class ChoreListComponent implements OnInit {
     }).subscribe({
       next: (item) => {
         console.log("Creating chore:", item);
-
-        // Refresh chores from server to get complete list
+        
         this.parentService.getChores(parentId).subscribe({
           next: (chores) => {
             this.chores = chores;

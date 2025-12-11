@@ -19,12 +19,10 @@ export class StorefrontComponent implements OnInit {
 
   inventory: StoreItem[] = [];
 
-  // Add item form fields
   itemName: string = "";
   itemPrice: number = 0;
   itemQuantity: number = 1;
 
-  // Edit item state
   editingItem: StoreItem | null = null;
   editItemName: string = "";
   editItemPrice: number = 0;
@@ -64,7 +62,6 @@ export class StorefrontComponent implements OnInit {
     }
   }
 
-  // Start editing an item
   startItemEdit(item: StoreItem) {
     this.editingItem = item;
     this.editItemName = item.itemName;
@@ -72,7 +69,6 @@ export class StorefrontComponent implements OnInit {
     this.editItemQuantity = item.availableInventory;
   }
 
-  // Cancel editing
   cancelItemEdit() {
     this.editingItem = null;
     this.editItemName = "";
@@ -80,7 +76,6 @@ export class StorefrontComponent implements OnInit {
     this.editItemQuantity = 0;
   }
 
-  // Save item edits
   saveItemEdit() {
     const parentId = this.authService.getParentId();
     if (!parentId || !this.editingItem) return;
@@ -91,7 +86,6 @@ export class StorefrontComponent implements OnInit {
       availableInventory: this.editItemQuantity
     }).subscribe({
       next: (updatedItem) => {
-        // Refresh store items from server
         this.parentService.getStoreItems(parentId).subscribe({
           next: (items) => {
             this.inventory = items;
@@ -103,7 +97,6 @@ export class StorefrontComponent implements OnInit {
     });
   }
 
-  // Delete an item
   deleteItem(itemId: string) {
     const parentId = this.authService.getParentId();
     if (!parentId) return;
@@ -111,7 +104,6 @@ export class StorefrontComponent implements OnInit {
     if (confirm('Are you sure you want to delete this item?')) {
       this.parentService.deleteStoreItem(parentId, itemId).subscribe({
         next: () => {
-          // Refresh store items from server
           this.parentService.getStoreItems(parentId).subscribe({
             next: (items) => {
               this.inventory = items;
@@ -139,8 +131,6 @@ export class StorefrontComponent implements OnInit {
     }).subscribe({
       next: (item) => {
         console.log('Created item:', item);
-
-        // Refresh store items from server
         this.parentService.getStoreItems(parentId).subscribe({
           next: (items) => {
             this.inventory = items;
@@ -164,8 +154,6 @@ export class StorefrontComponent implements OnInit {
     this.childService.purchaseItem(childId, itemId).subscribe({
       next: (transaction) => {
         console.log('Purchase successful:', transaction);
-
-        // Refresh store items to get updated inventory
         this.childService.getStoreItems(childId).subscribe({
           next: (items) => {
             this.inventory = items;
