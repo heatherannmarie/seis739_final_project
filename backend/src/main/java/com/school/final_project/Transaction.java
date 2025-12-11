@@ -30,7 +30,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(TransactionType type, float amount, String childId,
+    public Transaction(TransactionType type, double amount, String childId,
             String description, LocalDateTime timestamp) {
         this.type = type;
         this.amount = amount;
@@ -67,7 +67,7 @@ public class Transaction {
         this.type = type;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

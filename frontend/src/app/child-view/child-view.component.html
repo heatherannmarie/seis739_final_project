@@ -1,16 +1,16 @@
 <div class="layout">
     <nav class="sidebar">
         <ul>
-            <li><a (click)="activeSection = 'account'" [class.active]="activeSection === 'account'">My Account</a></li>
-            <li><a (click)="activeSection = 'chores'" [class.active]="activeSection === 'chores'">Chores</a></li>
-            <li><a (click)="activeSection = 'store'" [class.active]="activeSection === 'store'">Store</a></li>
-            <li><a (click)="activeSection = 'history'" [class.active]="activeSection === 'history'">Transaction
+            <li><a (click)="activeComponent = 'account'" [class.active]="activeComponent === 'account'">My Account</a></li>
+            <li><a (click)="activeComponent = 'chores'" [class.active]="activeComponent === 'chores'">Chores</a></li>
+            <li><a (click)="activeComponent = 'store'" [class.active]="activeComponent === 'store'">Store</a></li>
+            <li><a (click)="activeComponent = 'history'" [class.active]="activeComponent === 'history'">Transaction
                     History</a></li>
         </ul>
     </nav>
 
     <main class="content">
-        @if (activeSection === 'account') {
+        @if (activeComponent === 'account') {
         <div class="account-section">
             <h1>My Account</h1>
 
@@ -51,15 +51,15 @@
         }
 
 
-        @if (activeSection === 'chores') {
+        @if (activeComponent === 'chores') {
         <app-chore-list [chores]="chores" mode="child"></app-chore-list>
         }
 
-        @if (activeSection === 'store') {
+        @if (activeComponent === 'store') {
         <app-storefront></app-storefront>
         }
 
-        @if (activeSection === 'history') {
+        @if (activeComponent === 'history') {
         <app-transactions [transactions]="transactions"></app-transactions>
         }
     </main>

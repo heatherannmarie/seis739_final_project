@@ -48,7 +48,6 @@ public class ChildController {
                     .body(Map.of("error", "Invalid username or PIN"));
         }
 
-        // Return child data without exposing the PIN
         Map<String, Object> response = new HashMap<>();
         response.put("childId", child.getChildId());
         response.put("name", child.getName());
@@ -67,7 +66,6 @@ public class ChildController {
                     .body(Map.of("error", "Child not found"));
         }
 
-        // Return child data without exposing the PIN
         Map<String, Object> response = new HashMap<>();
         response.put("childId", child.getChildId());
         response.put("name", child.getName());
@@ -184,11 +182,9 @@ public class ChildController {
             throw new RuntimeException("Insufficient balance");
         }
 
-        // Process the purchase
         item.purchase();
         child.subtractBalance(item.getItemPrice());
 
-        // Create transaction record
         Transaction transaction = new Transaction(
                 TransactionType.PURCHASE,
                 (float) item.getItemPrice(),
@@ -199,7 +195,6 @@ public class ChildController {
         child.addTransaction(transaction);
         parent.addTransaction(transaction);
 
-        // Save changes
         dataStore.addChild(child);
         dataStore.addParent(parent);
 

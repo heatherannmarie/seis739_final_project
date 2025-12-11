@@ -20,7 +20,21 @@ export class ParentViewComponent implements OnInit {
   private childService = inject(ChildService);
   private authService = inject(AuthService);
 
-  activeSection: 'children' | 'chores' | 'store' | 'transactions' = 'children';
+  private _activeComponent: 'children' | 'chores' | 'store' | 'transactions' = 'children';
+
+  get activeComponent(){
+    return this._activeComponent;
+  }
+
+  set activeComponent(value: 'children' | 'chores' | 'store' | 'transactions') {
+    if (this._activeComponent !== value) {
+      this._activeComponent = value;
+      const parentId = this.authService.getParentId();
+      if (parentId) {
+        this.refreshComponentData(parentId);
+      }
+    }
+  }
   children: Child[] = [];
   chores: Chore[] = [];
   transactions: Transaction[] = [];
@@ -84,6 +98,18 @@ export class ParentViewComponent implements OnInit {
   }
 
 
+  refreshComponentData(parentId: string) {
+    switch(this.activeComponent) {
+      case 'children':
+        this.loadChildren(parentId);
+        break;
+      case 'chores':
+        this.loadChores(parentId);
+        break;
+      case 'transactions':
+        this.loadTransactions(parentId);
+    }
+  }
 
   closeNewChildPinModal() {
     this.showNewChildPinModal = false;
@@ -117,6 +143,7 @@ export class ParentViewComponent implements OnInit {
           this.children[index] = updatedChild;
         }
         this.cancelChildEdit();
+        this.loadChildren(parentId);
       },
       error: (err) => console.error('Failed to update child:', err)
     });
@@ -147,6 +174,7 @@ export class ParentViewComponent implements OnInit {
         }
         this.closeAllowanceModal();
         // Reload transactions
+        this.loadChildren(parentId);
         this.loadTransactions(parentId);
       },
       error: (err) => console.error('Failed to send allowance:', err)
@@ -156,6 +184,15 @@ export class ParentViewComponent implements OnInit {
   // Transactions Modal Methods
   viewChildTransactions(child: Child) {
     this.selectedChild = child;
+    this.childService.getChild(child.childId).subscribe({
+      next: (updatedChild) => {
+        this.selectedChild = updatedChild;
+        const index = this.children.findIndex(c => c.childId === updatedChild.childId);
+        if (index !== -1) {
+          this.children[index] = updatedChild;
+        }
+      }
+    });
     this.childService.getTransactions(child.childId).subscribe({
       next: (transactions) => {
         this.childTransactions = transactions;
@@ -184,10 +221,19 @@ export class ParentViewComponent implements OnInit {
 
   // Chores Modal Methods
   viewChildChores(child: Child) {
+    const parentId = this.authService.getParentId();
+    if (!parentId) return;
+
     this.selectedChild = child;
-    // Filter chores assigned to this child
-    this.childChores = this.chores.filter(c => c.assignedChildId === child.childId);
-    this.showChoresModal = true;
+
+    this.parentService.getChores(parentId).subscribe({
+      next: (chores) => {
+        this.chores = chores;
+        this.childChores = chores.filter(c => c.assignedChildId === child.childId);
+        this.showChoresModal = true;
+      },
+      error: (err) => console.error("Failed to load chores:", err)
+    });
   }
 
   closeChoresModal() {
@@ -203,16 +249,10 @@ export class ParentViewComponent implements OnInit {
     this.parentService.approveChore(parentId, choreId).subscribe({
       next: (transaction) => {
         console.log('Chore approved:', transaction);
-        // Update local chore status
-        const chore = this.childChores.find(c => c.choreId === choreId);
-        if (chore) {
-          chore.status = 'COMPLETED' as any;
-        }
-        // Update main chores list
-        const mainChore = this.chores.find(c => c.choreId === choreId);
-        if (mainChore) {
-          mainChore.status = 'COMPLETED' as any;
-        }
+
+        // Refresh chores
+        this.loadChores(parentId);
+
         // Refresh child data to update balance
         if (this.selectedChild) {
           this.childService.getChild(this.selectedChild.childId).subscribe({
@@ -221,12 +261,15 @@ export class ParentViewComponent implements OnInit {
               if (index !== -1) {
                 this.children[index] = updatedChild;
               }
-              if (this.selectedChild) {
-                this.selectedChild = updatedChild;
-              }
+              this.selectedChild = updatedChild;
+
+              // Update childChores list
+              this.childChores = this.chores.filter(c => c.assignedChildId === updatedChild.childId);
             }
           });
         }
+
+        // Refresh transactions
         this.loadTransactions(parentId);
       },
       error: (err) => console.error('Failed to approve chore:', err)
@@ -240,19 +283,11 @@ export class ParentViewComponent implements OnInit {
     this.parentService.denyChore(parentId, choreId).subscribe({
       next: (updatedChore) => {
         console.log('Chore denied:', updatedChore);
-        // Update local chore status
-        const chore = this.childChores.find(c => c.choreId === choreId);
-        if (chore) {
-          chore.status = updatedChore.status;
-          chore.assignedChildId = null;
-        }
-        // Update main chores list
-        const mainChore = this.chores.find(c => c.choreId === choreId);
-        if (mainChore) {
-          mainChore.status = updatedChore.status;
-          mainChore.assignedChildId = null;
-        }
-        // Remove from childChores since it's no longer assigned
+
+        // Refresh chores from server
+        this.loadChores(parentId);
+
+        // Update childChores list (remove denied chore)
         this.childChores = this.childChores.filter(c => c.choreId !== choreId);
       },
       error: (err) => console.error('Failed to deny chore:', err)
@@ -318,8 +353,10 @@ export class ParentViewComponent implements OnInit {
     }).subscribe({
       next: (child) => {
         console.log('Created child:', child);
-        this.children.push(child);
         this.closeNewChildAccountModal();
+
+        // Refresh children list
+        this.loadChildren(parentId);
 
         // Show the PIN modal with the new child's credentials
         this.newChildCreated = child;

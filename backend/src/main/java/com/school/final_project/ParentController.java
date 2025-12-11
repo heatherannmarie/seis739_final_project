@@ -32,7 +32,6 @@ public class ParentController {
         String email = request.get("email");
         String username = request.get("username");
 
-        // Validate required fields
         if (name == null || name.trim().isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Name is required"));
         }
@@ -43,12 +42,10 @@ public class ParentController {
             return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
         }
 
-        // Check if username already exists
         if (parentRepository.findByUsername(username).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Username already taken"));
         }
 
-        // Check if email already exists
         if (parentRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email already registered"));
         }
@@ -60,7 +57,7 @@ public class ParentController {
         return ResponseEntity.ok(parent);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login") // Fake authentication- this will need to be edited whenever a legitimate authentication service is added
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         String username = request.get("username");
 
@@ -74,8 +71,6 @@ public class ParentController {
                     .body(Map.of("error", "Invalid username"));
         }
 
-        // For now, just return the parent (password validation will be added later with
-        // OAuth)
         return ResponseEntity.ok(parent);
     }
 
@@ -109,7 +104,6 @@ public class ParentController {
             return ResponseEntity.badRequest().body(Map.of("error", "Username is required"));
         }
 
-        // Check if username already exists
         if (childRepository.findByUsername(username).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Username already taken"));
         }
@@ -523,7 +517,6 @@ public class ParentController {
         double amount = ((Number) request.get("amount")).doubleValue();
         child.addBalance(amount);
 
-        // Create transaction record
         Transaction transaction = new Transaction(
                 TransactionType.ALLOWANCE,
                 (float) amount,

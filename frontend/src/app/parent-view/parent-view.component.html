@@ -1,16 +1,16 @@
 <div class="layout">
     <nav class="sidebar">
         <ul>
-            <li><a (click)="activeSection = 'children'" [class.active]="activeSection === 'children'">Children</a></li>
-            <li><a (click)="activeSection = 'chores'" [class.active]="activeSection === 'chores'">Chores</a></li>
-            <li><a (click)="activeSection = 'store'" [class.active]="activeSection === 'store'">Store</a></li>
-            <li><a (click)="activeSection = 'transactions'"
-                    [class.active]="activeSection === 'transactions'">Transaction History</a></li>
+            <li><a (click)="activeComponent = 'children'" [class.active]="activeComponent === 'children'">Children</a></li>
+            <li><a (click)="activeComponent = 'chores'" [class.active]="activeComponent === 'chores'">Chores</a></li>
+            <li><a (click)="activeComponent = 'store'" [class.active]="activeComponent === 'store'">Store</a></li>
+            <li><a (click)="activeComponent = 'transactions'"
+                    [class.active]="activeComponent === 'transactions'">Transaction History</a></li>
         </ul>
     </nav>
 
     <main class="content">
-        @if (activeSection === 'children') {
+        @if (activeComponent === 'children') {
         <section id="page-title">
             <h1>Manage Children</h1>
             <button id="add-child-btn" (click)="openNewChildAccountModal()">+ Create Child Account</button>
@@ -94,15 +94,15 @@
 
         }
 
-        @if (activeSection === 'chores') {
+        @if (activeComponent === 'chores') {
         <app-chore-list [chores]="chores" mode="parent"></app-chore-list>
         }
 
-        @if (activeSection === 'store') {
+        @if (activeComponent === 'store') {
         <app-storefront></app-storefront>
         }
 
-        @if (activeSection === 'transactions') {
+        @if (activeComponent === 'transactions') {
         <app-transactions [transactions]="transactions"></app-transactions>
         }
     </main>

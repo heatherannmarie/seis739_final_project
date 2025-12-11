@@ -93,10 +93,12 @@ export class ChoreListComponent implements OnInit {
       assignedChildId: this.editChoreAssignedChild || undefined
     }).subscribe({
       next: (updatedChore) => {
-        const index = this.chores.findIndex(c => c.choreId === updatedChore.choreId);
-        if (index !== -1) {
-          this.chores[index] = updatedChore;
-        }
+        // Refresh chores from server
+        this.parentService.getChores(parentId).subscribe({
+          next: (chores) => {
+            this.chores = chores;
+          }
+        });
         this.cancelChoreEdit();
       },
       error: (err) => console.error('Failed to update chore:', err)
@@ -111,7 +113,12 @@ export class ChoreListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this chore?')) {
       this.parentService.deleteChore(parentId, choreId).subscribe({
         next: () => {
-          this.chores = this.chores.filter(c => c.choreId !== choreId);
+          // Refresh chores from server
+          this.parentService.getChores(parentId).subscribe({
+            next: (chores) => {
+              this.chores = chores;
+            }
+          });
           this.cancelChoreEdit();
         },
         error: (err) => console.error('Failed to delete chore:', err)
@@ -152,11 +159,13 @@ export class ChoreListComponent implements OnInit {
     this.parentService.approveChore(parentId, choreId).subscribe({
       next: (transaction) => {
         console.log('Chore approved, transaction:', transaction);
-        // Update the local chore status
-        const chore = this.chores.find(c => c.choreId === choreId);
-        if (chore) {
-          chore.status = 'COMPLETED' as any;
-        }
+
+        // Refresh chores from server
+        this.parentService.getChores(parentId).subscribe({
+          next: (chores) => {
+            this.chores = chores;
+          }
+        });
       },
       error: (err) => console.error('Failed to approve chore:', err)
     });
@@ -200,7 +209,14 @@ export class ChoreListComponent implements OnInit {
     }).subscribe({
       next: (item) => {
         console.log("Creating chore:", item);
-        this.chores.push(item);
+
+        // Refresh chores from server to get complete list
+        this.parentService.getChores(parentId).subscribe({
+          next: (chores) => {
+            this.chores = chores;
+          }
+        });
+
         this.closeAddChoreModal();
       },
       error: (err) => console.error("Failed to create chore:", err)

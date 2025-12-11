@@ -67,7 +67,6 @@
     border: 2px solid var(--primary);
 }
 
-/* Add to styles.css */
 .form-group {
     margin-bottom: 1rem;
 }
@@ -84,7 +83,6 @@
     width: 100%;
 }
 
-/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -121,7 +119,6 @@
     color: var(--text-dark);
 }
 
-/* Add to styles.css */
 .status-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
@@ -147,9 +144,9 @@
     color: var(--success);
 }
 
-/* Add to styles.css */
 .sidebar {
     width: 220px;
+    background: var(--text-dark);
     padding: 1.5rem 0;
     flex-shrink: 0;
 }
@@ -185,7 +182,6 @@
     border-left-color: var(--primary-light);
 }
 
-/* Add to styles.css */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -208,7 +204,6 @@ app-root {
     min-height: 100vh;
 }
 
-/* Typography */
 h1,
 h2,
 h3,
@@ -255,7 +250,6 @@ a:hover {
     align-items: center;
 }
 
-/* Buttons */
 button {
     font-family: 'Quicksand', sans-serif;
     font-weight: 600;
@@ -279,7 +273,6 @@ button:active {
     transform: translateY(0);
 }
 
-/* Form Elements */
 input,
 select,
 textarea {
@@ -309,7 +302,6 @@ label {
     color: var(--text-dark);
 }
 
-/* Cards */
 .card {
     background: var(--bg-white);
     border-radius: var(--radius-md);
@@ -318,7 +310,6 @@ label {
     border: 1px solid var(--border);
 }
 
-/* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -342,7 +333,6 @@ tr:hover {
     background-color: rgba(91, 138, 114, 0.04);
 }
 
-/* Utility Classes */
 .text-center {
     text-align: center;
 }
@@ -367,7 +357,6 @@ tr:hover {
     margin-top: 0.5rem;
 }
 
-/* Section default styling */
 section {
     display: block;
 }

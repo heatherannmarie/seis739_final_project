@@ -17,7 +17,7 @@ public class Chore {
     private String choreDescription;
     private double chorePrice;
     private String assignedChildId;
-    @Enumerated(EnumType.STRING) // Stores as "AVAILABLE", "PENDING", "COMPLETED"
+    @Enumerated(EnumType.STRING) // Enum options are "AVAILABLE", "PENDING", "COMPLETED"
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'AVAILABLE'")
     private ChoreStatus status;
 

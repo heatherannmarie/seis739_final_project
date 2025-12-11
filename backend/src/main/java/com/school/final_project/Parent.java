@@ -127,7 +127,7 @@ public class Parent {
         this.transactions = transactions;
     }
 
-    // Methods that modify the actual lists (not copies)
+    // Methods that modify the actual lists instead of returning copies
 
     public void addChore(Chore chore) {
         chores.add(chore);

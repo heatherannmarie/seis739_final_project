@@ -91,10 +91,12 @@ export class StorefrontComponent implements OnInit {
       availableInventory: this.editItemQuantity
     }).subscribe({
       next: (updatedItem) => {
-        const index = this.inventory.findIndex(i => i.itemID === updatedItem.itemID);
-        if (index !== -1) {
-          this.inventory[index] = updatedItem;
-        }
+        // Refresh store items from server
+        this.parentService.getStoreItems(parentId).subscribe({
+          next: (items) => {
+            this.inventory = items;
+          }
+        });
         this.cancelItemEdit();
       },
       error: (err) => console.error('Failed to update item:', err)
@@ -109,7 +111,12 @@ export class StorefrontComponent implements OnInit {
     if (confirm('Are you sure you want to delete this item?')) {
       this.parentService.deleteStoreItem(parentId, itemId).subscribe({
         next: () => {
-          this.inventory = this.inventory.filter(i => i.itemID !== itemId);
+          // Refresh store items from server
+          this.parentService.getStoreItems(parentId).subscribe({
+            next: (items) => {
+              this.inventory = items;
+            }
+          });
           this.cancelItemEdit();
         },
         error: (err) => console.error('Failed to delete item:', err)
@@ -132,13 +139,20 @@ export class StorefrontComponent implements OnInit {
     }).subscribe({
       next: (item) => {
         console.log('Created item:', item);
-        this.inventory.push(item);
+
+        // Refresh store items from server
+        this.parentService.getStoreItems(parentId).subscribe({
+          next: (items) => {
+            this.inventory = items;
+          }
+        });
+
         this.closeAddItemModal();
       },
       error: (err) => console.error('Failed to create item:', err)
     });
   }
-
+  
   purchaseItem(itemId: string) {
     const childId = this.authService.getChildId();
 
@@ -150,11 +164,13 @@ export class StorefrontComponent implements OnInit {
     this.childService.purchaseItem(childId, itemId).subscribe({
       next: (transaction) => {
         console.log('Purchase successful:', transaction);
-        // Update inventory locally
-        const item = this.inventory.find(i => i.itemID === itemId);
-        if (item) {
-          item.availableInventory--;
-        }
+
+        // Refresh store items to get updated inventory
+        this.childService.getStoreItems(childId).subscribe({
+          next: (items) => {
+            this.inventory = items;
+          }
+        });
       },
       error: (err) => console.error('Purchase failed:', err)
     });
