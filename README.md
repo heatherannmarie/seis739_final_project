@@ -29,9 +29,9 @@ CSS files in the Angular frontend could be cleaned up and consolidated.\
 ## System Diagrams
 
 ### C4 System Context Diagram
-![C4 System Context Diagram](https://imgur.com/6nXTK32)\\
+[Imgur](https://imgur.com/6nXTK32)
 ### C4 Container Diagram
-![C4 System Container Diagram](https://imgur.com/muYGkOb)\\
+[Imgur](https://imgur.com/muYGkOb)
 
 ### C4 Component/Code Diagram Hybrid of Spring Boot App
-![C4 Component/Code Diagram Hybrid of Spring Boot App](https://imgur.com/etNmznA)\\
+[Imgur](https://imgur.com/etNmznA)
